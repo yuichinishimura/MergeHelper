@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="461" seq="0" time="1448189196775">
+<inserted> </inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="560" seq="0" time="1448189205303">
+<inserted> + 1</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="641" seq="0" time="1448189205303">
+<inserted>&#13;
+		</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="645" seq="0" time="1448189207319">
+<inserted>year++</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="651" seq="0" time="1448189207320">
+<inserted>;</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.ui.file.save" time="1448189224319"/>
+<fileOperation action="SAVE" author="example" file="/School/src/a/Student.java" time="1448189224368">
+<code>package a;&#13;
+&#13;
+import b.c.SchoolYear;&#13;
+import b.c.SchoolYearException;&#13;
+&#13;
+public class Student {&#13;
+	private int id;&#13;
+	private String firstName;&#13;
+	private String lastName;&#13;
+	private int year;&#13;
+&#13;
+	public Student(int id, String fn, String ln, int y) {&#13;
+		this.id = id;&#13;
+		firstName = fn;&#13;
+		lastName = ln;&#13;
+		year = y;&#13;
+	}&#13;
+&#13;
+	public String getFullName() {&#13;
+		return firstName + " " + lastName;&#13;
+	}&#13;
+&#13;
+	public String toString() {&#13;
+		return String.valueOf(id) + ":" + getFullName();&#13;
+	}&#13;
+&#13;
+	public void spendYear() throws SchoolYearException {&#13;
+		year++;&#13;
+		if (year + 1 &gt; SchoolYear.LIMIT) {&#13;
+			throw new SchoolYearException(getFullName());&#13;
+		}&#13;
+		year++;&#13;
+	}&#13;
+}</code>
+</fileOperation>
+</operations>
+</OperationHistory>

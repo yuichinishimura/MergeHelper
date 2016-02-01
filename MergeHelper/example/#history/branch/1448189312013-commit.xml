@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<commitOperation author="example" commitId="b94e0851adf9d9931b34d256e9122409470d80af" file="/School/src/b/c/SchoolYear.java" parentId="4421d5ba56af81f2125ce54acb9b3d93af641f7b" time="1448189312013">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYear {&#13;
+	public static int LIMIT = 7;&#13;
+}&#13;
+</code>
+</commitOperation>
+<commitOperation author="example" commitId="b94e0851adf9d9931b34d256e9122409470d80af" file="/School/src/a/Student.java" parentId="4421d5ba56af81f2125ce54acb9b3d93af641f7b" time="1448189312013">
+<code>package a;&#13;
+&#13;
+import b.c.SchoolYear;&#13;
+import b.c.SchoolYearException;&#13;
+&#13;
+public class Student {&#13;
+	private int id;&#13;
+	private String firstName;&#13;
+	private String lastName;&#13;
+	private int year;&#13;
+&#13;
+	public Student(int id, String fn, String ln, int y) {&#13;
+		this.id = id;&#13;
+		firstName = fn;&#13;
+		lastName = ln;&#13;
+		year = y;&#13;
+	}&#13;
+&#13;
+	public String getFullName() {&#13;
+		return firstName + " " + lastName;&#13;
+	}&#13;
+&#13;
+	public String toString() {&#13;
+		return String.valueOf(id) + ":" + getFullName();&#13;
+	}&#13;
+&#13;
+	public void spendYear() throws SchoolYearException {&#13;
+		int tmpYear = year + 1;&#13;
+		if (tmpYear &lt;= SchoolYear.LIMIT) {&#13;
+			year = tmpYear;&#13;
+		} else {&#13;
+			year = -1;&#13;
+			throw new SchoolYearException(toString());&#13;
+		}&#13;
+	}&#13;
+}</code>
+</commitOperation>
+<commitOperation author="example" commitId="b94e0851adf9d9931b34d256e9122409470d80af" file="/School/src/b/c/SchoolYearException.java" parentId="4421d5ba56af81f2125ce54acb9b3d93af641f7b" time="1448189312013">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYearException extends Exception {&#13;
+	private static final long serialVersionUID = 1L;&#13;
+&#13;
+	public SchoolYearException(String name) {&#13;
+		super(name);&#13;
+	}&#13;
+}&#13;
+</code>
+</commitOperation>
+</operations>
+</OperationHistory>

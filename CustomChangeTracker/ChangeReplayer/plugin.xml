@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.7"?>
+<plugin>
+   <extension-point id="sourcecodeviewPoint" name="SourceCodeView" schema="schema/sourcecodeviewPoint.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.eclipse.ui"
+            class="org.jtool.changereplayer.ui.PackageExplorerView"
+            icon="icons/cr.gif"
+            id="ChangeHistory.view.PackageExplorerView"
+            name="Change Explorer"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.jtool.changereplayer.ui.ChangeHistoryEditor"
+            icon="icons/cr.gif"
+            id="ChangeReplayer.editor.ChangeHistoryEditor"
+            name="Change History">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.ui"
+            class="org.jtool.changereplayer.ui.HistoryView"
+            icon="icons/cr.gif"
+            id="ChangeHistory.view.HistoryView"
+            name="Change History"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentViewers">
+   </extension>
+</plugin>

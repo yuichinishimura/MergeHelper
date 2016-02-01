@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<fileOperation action="ACT" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188853758"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="127" seq="0" time="1448188853807">
+<inserted/>
+<deleted>:</deleted>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>&#13;
+&#13;
+	</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>;</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>1L</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>serialVersionUID = </inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>&#13;
+	private static final long </inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188853807">
+<inserted>/**&#13;
+	 * &#13;
+	 */</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.delete.line" time="1448188854569"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="70" seq="0" time="1448188854569">
+<inserted/>
+<deleted>	/**&#13;
+</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.delete.line" time="1448188854752"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="70" seq="0" time="1448188854752">
+<inserted/>
+<deleted>	 * &#13;
+</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.delete.line" time="1448188854911"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="70" seq="0" time="1448188854913">
+<inserted/>
+<deleted>	 */&#13;
+</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.file.save" time="1448188855208"/>
+<fileOperation action="SAVE" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188855260">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYearException extends Exception {&#13;
+	private static final long serialVersionUID = 1L;&#13;
+&#13;
+	public SchoolYearException(String name) {&#13;
+		super(name);&#13;
+	}&#13;
+}&#13;
+</code>
+</fileOperation>
+</operations>
+</OperationHistory>

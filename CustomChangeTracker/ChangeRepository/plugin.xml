@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.7"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="ChangeRecorder"
+            class="org.jtool.changerepository.PreferencePage"
+            id="changerepositoryj.preference.page">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.jtool.changerepository.PreferenceInitializer">
+      </initializer>
+   </extension>
+</plugin>

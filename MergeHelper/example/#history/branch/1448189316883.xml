@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.jdt.ui.edit.text.java.format" time="1448189300294"/>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.ui.file.save" time="1448189300639"/>
+</operations>
+</OperationHistory>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<fileOperation action="NEW" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188819274">
+<code/>
+</fileOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="0" seq="0" time="1448188819404">
+<inserted>package b.c;&#13;
+&#13;
+public class SchoolYearException {&#13;
+&#13;
+}&#13;
+</inserted>
+<deleted/>
+</normalOperation>
+<fileOperation action="OPEN" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188819406">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYearException {&#13;
+&#13;
+}&#13;
+</code>
+</fileOperation>
+<fileOperation action="ACT" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188819556"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="48" seq="0" time="1448188823902">
+<inserted> e</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.contentAssist.proposals" time="1448188823902"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="49" seq="0" time="1448188826662">
+<inserted>extends</inserted>
+<deleted>e</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.contentAssist.proposals" time="1448188828037"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="56" seq="0" time="1448188828038">
+<inserted> Ex</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.jdt.ui.edit.text.java.format" time="1448188829132"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="57" seq="0" time="1448188830299">
+<inserted>Exception</inserted>
+<deleted>Ex</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.contentAssist.proposals" time="1448188832535"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="70" seq="0" time="1448188834521">
+<inserted>	</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="71" seq="0" time="1448188834522">
+<inserted>public SchoolYearException() {&#13;
+		// TODO Auto-generated constructor stub&#13;
+	}</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.edit.text.delete.line" time="1448188835655"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="103" seq="0" time="1448188835664">
+<inserted/>
+<deleted>		// TODO Auto-generated constructor stub&#13;
+</deleted>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="101" seq="0" time="1448188836228">
+<inserted>&#13;
+		</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="98" seq="0" time="1448188842308">
+<inserted>String name</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="116" seq="0" time="1448188843591">
+<inserted>super()</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="122" seq="0" time="1448188844833">
+<inserted>name</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="127" seq="0" time="1448188844837">
+<inserted>:</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYearException.java" offset="128" seq="0" time="1448188844837">
+<inserted>;</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.jdt.ui.edit.text.java.format" time="1448188846244"/>
+<menuOperation author="example" file="/School/src/b/c/SchoolYearException.java" label="org.eclipse.ui.file.save" time="1448188846511"/>
+<fileOperation action="SAVE" author="example" file="/School/src/b/c/SchoolYearException.java" time="1448188846576">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYearException extends Exception {&#13;
+	public SchoolYearException(String name) {&#13;
+		super(name);&#13;
+	}&#13;
+}&#13;
+</code>
+</fileOperation>
+</operations>
+</OperationHistory>

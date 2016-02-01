@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.ui.edit.selectAll" time="1448188941263"/>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.ui.edit.copy" time="1448188942507"/>
+<fileOperation action="CLOSE" author="example" file="/School/src/a/Student.java" time="1448188969562">
+<code>package a;&#13;
+&#13;
+import b.c.SchoolYear;&#13;
+import b.c.SchoolYearException;&#13;
+&#13;
+public class Student {&#13;
+	private int id;&#13;
+	private String firstName;&#13;
+	private String lastName;&#13;
+	private int year;&#13;
+&#13;
+	public Student(int id, String fn, String ln, int y) {&#13;
+		this.id = id;&#13;
+		firstName = fn;&#13;
+		lastName = ln;&#13;
+		year = y;&#13;
+	}&#13;
+&#13;
+	public String getFullName() {&#13;
+		return firstName + " " + lastName;&#13;
+	}&#13;
+&#13;
+	public void spendYear() throws SchoolYearException {&#13;
+		year++;&#13;
+		if (year &gt; SchoolYear.LIMIT) {&#13;
+			throw new SchoolYearException(getFullName());&#13;
+		}&#13;
+	}&#13;
+}</code>
+</fileOperation>
+</operations>
+</OperationHistory>

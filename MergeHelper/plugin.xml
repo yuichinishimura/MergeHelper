@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+         <command
+            id="MergeHelper.command"
+            name="Run">
+      </command>
+   </extension>
+   
+      <extension
+         point="ChangeReplayer.sourcecodeviewPoint">
+      <sourcecodeview
+            class="fse.eclipse.mergehelper.ui.MH_SourceCodeView"
+            name="MH_SourceCodeView">
+      </sourcecodeview>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.eclipse.ui"
+            class="fse.eclipse.mergehelper.ui.MH_PackageExplorerView"
+            icon="icons/cr.gif"
+            id="ChangeHistory.view.MH_PackageExplorerView"
+            name="Change Explorer - Merge Helper"
+            restorable="true">
+      </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="fse.eclipse.mergehelper.ui.MH_ChangeHistoryEditor"
+            icon="icons/cr.gif"
+            id="ChangeReplayer.editor.MH_ChangeHistoryEditor"
+            name="Change History - Merge Helper">
+      </editor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.ui"
+            class="fse.eclipse.mergehelper.ui.MH_HistoryView"
+            icon="icons/cr.gif"
+            id="ChangeHistory.view.MH_HistoryView"
+            name="Change History - Merge Helper"
+            restorable="true">
+      </view>
+   </extension>
+   
+</plugin>

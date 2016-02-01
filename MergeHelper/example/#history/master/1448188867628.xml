@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<fileOperation action="NEW" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188810656">
+<code/>
+</fileOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYear.java" offset="0" seq="0" time="1448188810822">
+<inserted>package b.c;&#13;
+&#13;
+public class SchoolYear {&#13;
+&#13;
+}&#13;
+</inserted>
+<deleted/>
+</normalOperation>
+<fileOperation action="OPEN" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188810822">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYear {&#13;
+&#13;
+}&#13;
+</code>
+</fileOperation>
+<fileOperation action="ACT" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188810948"/>
+<fileOperation action="ACT" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188858120"/>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYear.java" offset="43" seq="0" time="1448188866943">
+<inserted>	public static int LIMIT = 7</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/b/c/SchoolYear.java" offset="71" seq="0" time="1448188866944">
+<inserted>;</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/b/c/SchoolYear.java" label="org.eclipse.jdt.ui.edit.text.java.format" time="1448188867366"/>
+<menuOperation author="example" file="/School/src/b/c/SchoolYear.java" label="org.eclipse.ui.file.save" time="1448188867573"/>
+<fileOperation action="SAVE" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188867627">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYear {&#13;
+	public static int LIMIT = 7;&#13;
+}&#13;
+</code>
+</fileOperation>
+</operations>
+</OperationHistory>

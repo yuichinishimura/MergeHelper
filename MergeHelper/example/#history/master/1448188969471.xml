@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<fileOperation action="CLOSE" author="example" file="/School/src/b/c/SchoolYear.java" time="1448188969471">
+<code>package b.c;&#13;
+&#13;
+public class SchoolYear {&#13;
+	public static int LIMIT = 7;&#13;
+}&#13;
+</code>
+</fileOperation>
+</operations>
+</OperationHistory>

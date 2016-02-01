@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OperationHistory version="1.0a">
+<operations>
+<fileOperation action="OPEN" author="example" file="/School/src/a/Student.java" time="1448189119130">
+<code>package a;&#13;
+&#13;
+import b.c.SchoolYear;&#13;
+import b.c.SchoolYearException;&#13;
+&#13;
+public class Student {&#13;
+	private int id;&#13;
+	private String firstName;&#13;
+	private String lastName;&#13;
+	private int year;&#13;
+&#13;
+	public Student(int id, String fn, String ln, int y) {&#13;
+		this.id = id;&#13;
+		firstName = fn;&#13;
+		lastName = ln;&#13;
+		year = y;&#13;
+	}&#13;
+&#13;
+	public String getFullName() {&#13;
+		return firstName + " " + lastName;&#13;
+	}&#13;
+&#13;
+	public void spendYear() throws SchoolYearException {&#13;
+		year++;&#13;
+		if (year &gt; SchoolYear.LIMIT) {&#13;
+			throw new SchoolYearException(getFullName());&#13;
+		}&#13;
+	}&#13;
+}</code>
+</fileOperation>
+<fileOperation action="ACT" author="example" file="/School/src/a/Student.java" time="1448189119841"/>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="393" seq="0" time="1448189129915">
+<inserted>&#13;
+	</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="396" seq="0" time="1448189130078">
+<inserted>&#13;
+	</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="399" seq="0" time="1448189138841">
+<inserted>public String toString</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="421" seq="0" time="1448189143331">
+<inserted>() </inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="424" seq="0" time="1448189143332">
+<inserted>{</inserted>
+<deleted/>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="425" seq="0" time="1448189143904">
+<inserted>&#13;
+		&#13;
+	}</inserted>
+<deleted/>
+</normalOperation>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.jdt.ui.edit.text.java.format" time="1448189147951"/>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="425" seq="0" time="1448189147992">
+<inserted>&#13;
+&#13;
+	</inserted>
+<deleted>&#13;
+		&#13;
+	</deleted>
+</normalOperation>
+<normalOperation action="EDIT" author="example" file="/School/src/a/Student.java" offset="393" seq="0" time="1448189147993">
+<inserted>&#13;
+&#13;
+	</inserted>
+<deleted>&#13;
+	&#13;
+	</deleted>
+</normalOperation>
+<menuOperation author="example" file="/School/src/a/Student.java" label="org.eclipse.ui.file.save" time="1448189148391"/>
+<fileOperation action="SAVE" author="example" file="/School/src/a/Student.java" time="1448189148487">
+<code>package a;&#13;
+&#13;
+import b.c.SchoolYear;&#13;
+import b.c.SchoolYearException;&#13;
+&#13;
+public class Student {&#13;
+	private int id;&#13;
+	private String firstName;&#13;
+	private String lastName;&#13;
+	private int year;&#13;
+&#13;
+	public Student(int id, String fn, String ln, int y) {&#13;
+		this.id = id;&#13;
+		firstName = fn;&#13;
+		lastName = ln;&#13;
+		year = y;&#13;
+	}&#13;
+&#13;
+	public String getFullName() {&#13;
+		return firstName + " " + lastName;&#13;
+	}&#13;
+&#13;
+	public String toString() {&#13;
+&#13;
+	}&#13;
+&#13;
+	public void spendYear() throws SchoolYearException {&#13;
+		year++;&#13;
+		if (year &gt; SchoolYear.LIMIT) {&#13;
+			throw new SchoolYearException(getFullName());&#13;
+		}&#13;
+	}&#13;
+}</code>
+</fileOperation>
+</operations>
+</OperationHistory>
