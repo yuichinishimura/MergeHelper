@@ -4,13 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.osgi_3.10.2.v20150203-1939.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.core.jobs_3.6.1.v20141014-1248.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.core.resources_3.9.1.v20140825-1431.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.equinox.preferences_3.5.200.v20140224-1527.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sa-son/Documents/AST_jar/org.eclipse.jdt.core_3.10.2.v20150120-1634.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
