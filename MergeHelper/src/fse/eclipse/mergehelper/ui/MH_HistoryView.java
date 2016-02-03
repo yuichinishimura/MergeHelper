@@ -198,7 +198,7 @@ public class MH_HistoryView extends HistoryView {
 
         String branchName = RepositoryElementInfoUtil.getBranchName(fileInfo);
         MergeType type = BranchRootInfo.getInstance().getType(branchName);
-        int mergePoint = mPoint.getFileId(type);
+        int mergePoint = mPoint.getMergePoint(type);
         Map<Integer, MergedResult> resultMap = bfInfo.getMergedResultMap();
 
         List<UnifiedOperation> ops = fileInfo.getOperations();
@@ -206,6 +206,7 @@ public class MH_HistoryView extends HistoryView {
 
         boolean setMergeItemFlag = false;
         String code = "";
+        int beforeId = -1;
         for (int i = 0; i < size; i++) {
             UnifiedOperation op = ops.get(i);
 
@@ -216,8 +217,8 @@ public class MH_HistoryView extends HistoryView {
                     offset = op.getStart();
                     code = fileInfo.getCode(i);
                 } else {
-                    offset = resultMap.get(id - 1).getOperationOffset();
-                    code = resultMap.get(id - 1).getCode();
+                    offset = resultMap.get(beforeId).getOperationOffset();
+                    code = resultMap.get(beforeId).getCode();
                 }
             } else {
                 offset = -1;
@@ -239,6 +240,7 @@ public class MH_HistoryView extends HistoryView {
             } else if (id == mergePoint) {
                 setMergeItemFlag = true;
             }
+            beforeId = id;
         }
 
         if (setMergeItemFlag) {
@@ -251,7 +253,7 @@ public class MH_HistoryView extends HistoryView {
         MergeType aType = MergeType.getAnotherType(type);
         StringBuilder sb = new StringBuilder();
         sb.append(BranchRootInfo.getInstance().getBranchName(aType));
-        sb.append(" : ").append(mPoint.getFileId(aType));
+        // sb.append(" : ").append(mPoint.getFileId(aType));
 
         TableItem item = new TableItem(operationTable, SWT.NONE);
         item.setText(ID_COL, MERGE_MARK);

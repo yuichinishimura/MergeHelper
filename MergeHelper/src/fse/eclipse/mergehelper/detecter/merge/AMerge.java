@@ -106,8 +106,8 @@ public class AMerge extends AbstractDetector {
         List<FileInfo> fInfos = pInfo.getAllFileInfo();
         for (FileInfo fInfo : fInfos) {
             String filePath = createMergePath(fInfo, branchName);
-            int idx = RepositoryElementInfoUtil.getJustBeforeFileId(fInfo, point);
-            FileStream.write(filePath, fInfo.getCode(idx));
+            int id = RepositoryElementInfoUtil.getJustBeforeFileId(fInfo, point);
+            FileStream.write(filePath, fInfo.getCode(id));
         }
 
         git.add().addFilepattern(BranchRootInfo.getInstance().getName()).call();

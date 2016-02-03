@@ -62,14 +62,17 @@ public class AMergeCorrespondOperation extends AbstractDetector {
 
         List<UnifiedOperation> ops = fInfo.getOperations();
         int size = ops.size();
-        for (int i = point + 1; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             UnifiedOperation op = ops.get(i);
+            int id = op.getId();
 
-            List<ElementSlice> slices = bfInfo.getSlices(op);
-            if (slices.size() == 0) {
-                // TODO: sliceに存在しないopの対応
-            } else {
-                mergedCode = replaceElementBody(fInfo, bfInfo, mergedCode, slices.get(0), i);
+            if (point < id) {
+                List<ElementSlice> slices = bfInfo.getSlices(op);
+                if (slices.size() == 0) {
+                    // TODO: sliceに存在しないopの対応
+                } else {
+                    mergedCode = replaceElementBody(fInfo, bfInfo, mergedCode, slices.get(0), id);
+                }
             }
         }
     }

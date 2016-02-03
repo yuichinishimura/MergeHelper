@@ -1,7 +1,6 @@
 package fse.eclipse.mergehelper.detecter.merge;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +15,6 @@ import fse.eclipse.mergehelper.element.ElementSlice;
 import fse.eclipse.mergehelper.element.MergePoint;
 import fse.eclipse.mergehelper.element.MergeType;
 import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
-import fse.eclipse.mergehelper.util.RepositoryElementInfoUtil;
 
 // TODO: アルゴリズム改善 + コード綺麗に
 public class AMergePointSearcher extends AbstractDetector {
@@ -26,6 +24,7 @@ public class AMergePointSearcher extends AbstractDetector {
     private static AbstractDetector instance = new AMergePointSearcher();
 
     private MergePoint mPoint;
+    private ElementSlice s_slice, d_slice;
 
     private boolean isFind;
 
@@ -48,15 +47,16 @@ public class AMergePointSearcher extends AbstractDetector {
             return;
         }
 
+        int s_point = mPoint.getMergePoint(MergeType.SRC) + 1;
+        int d_point = mPoint.getMergePoint(MergeType.DEST) + 1;
+
         List<ElementSlice> s_slices = rootInfo.getBranchInfo(MergeType.SRC).getAllSlice();
-        List<OperationInfo> s_opInfos = new ArrayList<OperationInfo>(s_pInfo.getOperationNumber());
-        initOperationInfos(s_opInfos, s_pInfo, s_slices);
+        int s_limit = searchPointRange(cInfo, s_pInfo, s_slices, s_point);
 
         List<ElementSlice> d_slices = rootInfo.getBranchInfo(MergeType.DEST).getAllSlice();
-        List<OperationInfo> d_opInfos = new ArrayList<OperationInfo>(d_pInfo.getOperationNumber());
-        initOperationInfos(d_opInfos, d_pInfo, d_slices);
+        int d_limit = searchPointRange(cInfo, d_pInfo, d_slices, d_point);
 
-        searchPointEqualBody(cInfo, s_pInfo, d_pInfo, s_opInfos, d_opInfos);
+        searchPointEqualBody(cInfo, s_pInfo, d_pInfo, s_point, s_limit, d_point, d_limit);
 
         rootInfo.setMergePoint(mPoint);
     }
@@ -65,10 +65,7 @@ public class AMergePointSearcher extends AbstractDetector {
         Map<ElementSlice, ElementSlice> elemMap = cInfo.getConflictSliceMap();
         String targetElement = null;
         int s_point = Integer.MAX_VALUE;
-        int s_fileIdx = Integer.MAX_VALUE;
-
         int d_point = Integer.MAX_VALUE;
-        int d_fileIdx = Integer.MAX_VALUE;
 
         for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
             ElementSlice s_slice = entry.getKey();
@@ -77,74 +74,47 @@ public class AMergePointSearcher extends AbstractDetector {
             UnifiedOperation s_op = s_slice.getOperations().get(0);
             UnifiedOperation d_op = d_slice.getOperations().get(0);
 
-            int s_point2 = RepositoryElementInfoUtil.getUId(s_op) - 1;
-            int d_point2 = RepositoryElementInfoUtil.getUId(d_op) - 1;
+            int s_point2 = s_op.getId() - 1;
+            int d_point2 = d_op.getId() - 1;
 
             if (s_point > s_point2 && d_point > d_point2) {
                 // TODO: 範囲を考慮して改善
                 s_point = s_point2;
-                s_fileIdx = RepositoryElementInfoUtil.getFileId(s_op);
-
                 d_point = d_point2;
-                d_fileIdx = RepositoryElementInfoUtil.getFileId(d_op);
 
                 targetElement = s_slice.getFullName();
+                this.s_slice = s_slice;
+                this.d_slice = d_slice;
             }
         }
 
         if (targetElement != null) {
             mPoint = new MergePoint(targetElement);
-            mPoint.setMergePoint(s_point, s_fileIdx, d_point, d_fileIdx);
+            mPoint.setMergePoint(s_point, d_point);
             return true;
         }
         return false;
     }
 
-    private void initOperationInfos(List<OperationInfo> opInfos, ProjectInfo pInfo, List<ElementSlice> slices) {
-        List<UnifiedOperation> ops = pInfo.getOperations();
-        for (UnifiedOperation op : ops) {
-            OperationInfo opInfo = new OperationInfo(op);
+    private void searchPointEqualBody(ConflictInfo cInfo, ProjectInfo s_pInfo, ProjectInfo d_pInfo, int s_idx, int s_limit, int d_idx, int d_limit) {
+        List<UnifiedOperation> s_ops = s_pInfo.getOperations();
+        List<UnifiedOperation> d_ops = d_pInfo.getOperations();
 
-            int id = RepositoryElementInfoUtil.getFileId(op);
-            List<ElementSlice> ss = selectSlice(op, slices);
-            for (ElementSlice slice : ss) {
-                opInfo.addElement(slice.getFileName(), slice.getBody(id));
-            }
+        for (int i = s_idx; i < s_limit; i++) {
+            UnifiedOperation s_op = s_ops.get(i);
+            if (s_slice.contains(s_op)) {
+                int s_id = s_op.getId();
+                String s_body = s_slice.getBody(s_id);
 
-            opInfos.add(opInfo);
-        }
-    }
+                for (int j = d_idx; j < d_limit; j++) {
+                    UnifiedOperation d_op = d_ops.get(j);
+                    if (d_slice.contains(d_op)) {
+                        int d_id = d_op.getId();
+                        String d_body = d_slice.getBody(d_id);
 
-    private void searchPointEqualBody(ConflictInfo cInfo, ProjectInfo s_pInfo, ProjectInfo d_pInfo, List<OperationInfo> s_opInfos,
-            List<OperationInfo> d_opInfos) {
-        int s_point2 = mPoint.getMergePoint(MergeType.SRC) + 1;
-        int d_point2 = mPoint.getMergePoint(MergeType.DEST) + 1;
-
-        int s_limit = searchPointOtherConflictElement(cInfo, s_opInfos, s_point2);
-        int d_limit = searchPointOtherConflictElement(cInfo, d_opInfos, d_point2);
-
-        for (int i = s_point2; i < s_limit; i++) {
-            OperationInfo s_opInfo = selectOperationInfo(i, s_opInfos);
-            if (!s_opInfo.isEdit()) {
-                continue;
-            }
-
-            List<String> s_bodies = s_opInfo.getBodies();
-            for (int j = d_point2; j < d_limit; j++) {
-                OperationInfo d_opInfo = selectOperationInfo(j, d_opInfos);
-                if (!d_opInfo.isEdit()) {
-                    continue;
-                }
-
-                List<String> d_bodies = d_opInfo.getBodies();
-                for (String s_body : s_bodies) {
-                    for (String d_body : d_bodies) {
                         if (s_body.equals(d_body)) {
                             // TODO: 範囲を考慮して改善
-                            int s_fileIdx = s_opInfo.getFileId();
-                            int d_fileIdx = d_opInfo.getFileId();
-
-                            mPoint.setMergePoint(i, s_fileIdx, j, d_fileIdx);
+                            mPoint.setMergePoint(s_id, d_id);
                         }
                     }
                 }
@@ -152,19 +122,18 @@ public class AMergePointSearcher extends AbstractDetector {
         }
     }
 
-    private int searchPointOtherConflictElement(ConflictInfo cInfo, List<OperationInfo> opInfos, int idx) {
+    private int searchPointRange(ConflictInfo cInfo, ProjectInfo pInfo, List<ElementSlice> allSlices, int idx) {
         String targetElement = mPoint.getTargetElement();
-        int limit = opInfos.size();
-        for (; idx < limit; idx++) {
-            OperationInfo opInfo = opInfos.get(idx);
-            if (!opInfo.isEdit()) {
-                continue;
-            }
+        List<UnifiedOperation> ops = pInfo.getOperations();
+        int limit = ops.size();
+        for (int i = idx; i < limit; i++) {
+            UnifiedOperation op = ops.get(i);
+            List<ElementSlice> slices = selectSlice(op, allSlices);
 
-            List<String> names = opInfo.getElemNames();
-            for (String name : names) {
-                if (!name.equals(targetElement) && cInfo.isConflictElement(name)) {
-                    return limit;
+            for (ElementSlice slice : slices) {
+                String name = slice.getFullName();
+                if (!targetElement.equals(name) && cInfo.isConflictElement(name)) {
+                    return i;
                 }
             }
         }
@@ -179,15 +148,6 @@ public class AMergePointSearcher extends AbstractDetector {
             }
         }
         return ss;
-    }
-
-    private OperationInfo selectOperationInfo(int uid, List<OperationInfo> opInfos) {
-        for (OperationInfo opInfo : opInfos) {
-            if (uid == opInfo.getUId()) {
-                return opInfo;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -206,56 +166,6 @@ public class AMergePointSearcher extends AbstractDetector {
             AMerge.getInstance().detect(dialog);
         } else {
             error(dialog);
-        }
-    }
-
-    private class OperationInfo {
-        private final UnifiedOperation op;
-        private final List<String> elemNames;
-        private final List<String> bodies;
-
-        OperationInfo(UnifiedOperation op) {
-            this.op = op;
-            elemNames = new ArrayList<String>();
-            bodies = new ArrayList<String>();
-        }
-
-        int getUId() {
-            return op.getId();
-        }
-
-        int getFileId() {
-            return RepositoryElementInfoUtil.getFileId(op);
-        }
-
-        void addElement(String name, String body) {
-            elemNames.add(name);
-            bodies.add(body);
-        }
-
-        List<String> getElemNames() {
-            return Collections.unmodifiableList(elemNames);
-        }
-
-        List<String> getBodies() {
-            return Collections.unmodifiableList(bodies);
-        }
-
-        boolean isEdit() {
-            return elemNames.size() > 0 && bodies.size() > 0;
-        }
-
-        @Override
-        public String toString() {
-            int uid = getUId();
-            int idx = getFileId();
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(uid).append("-").append(idx).append(" elem:");
-            for (String elemName : elemNames) {
-                sb.append(elemName).append(" ");
-            }
-            return sb.toString();
         }
     }
 }

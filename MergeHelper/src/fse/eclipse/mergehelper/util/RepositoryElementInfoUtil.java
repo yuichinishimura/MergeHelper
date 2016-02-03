@@ -1,7 +1,5 @@
 package fse.eclipse.mergehelper.util;
 
-import java.util.List;
-
 import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.data.PackageInfo;
 import org.jtool.changerepository.data.ProjectInfo;
@@ -47,48 +45,16 @@ public class RepositoryElementInfoUtil {
         return name.substring(0, idx);
     }
 
-    public static int getUId(UnifiedOperation op_fileinfo) {
-        ProjectInfo pInfo = op_fileinfo.getProjectInfo();
-        List<UnifiedOperation> ops = pInfo.getOperations();
-        for (UnifiedOperation op : ops) {
-            if (op.equals(op_fileinfo)) {
-                return op.getId();
-            }
-        }
-        return -1;
-    }
-
-    public static int getFileId(UnifiedOperation op_projectinfo) {
-        FileInfo fInfo = op_projectinfo.getFileInfo();
-        List<UnifiedOperation> ops = fInfo.getOperations();
-        for (UnifiedOperation op : ops) {
-            if (op.equals(op_projectinfo)) {
-                return op.getId();
-            }
-        }
-        return -1;
-    }
-
-    public static int getFileIndex(UnifiedOperation op_projectinfo) {
-        FileInfo fInfo = op_projectinfo.getFileInfo();
-        List<UnifiedOperation> ops = fInfo.getOperations();
-        return ops.indexOf(op_projectinfo);
-    }
-
-    public static int getJustBeforeFileId(FileInfo fInfo, int uid) {
-        UnifiedOperation op = fInfo.getProjectInfo().getOperation(uid - 1);
+    public static int getJustBeforeFileId(FileInfo fInfo, int id) {
+        UnifiedOperation op = fInfo.getProjectInfo().getOperation(id - 1);
         long time = op.getTime();
 
         int size = fInfo.getOperationNumber();
         for (int i = size - 1; i >= 0; i--) {
             UnifiedOperation fop = fInfo.getOperation(i);
-            try {
-                long ftime = fop.getTime();
-                if (ftime <= time) {
-                    return fop.getId();
-                }
-            } catch (NullPointerException e) {
-                throw new Error(size + " " + i + " " + time);
+            long ftime = fop.getTime();
+            if (ftime <= time) {
+                return fop.getId();
             }
         }
         return fInfo.getOperation(0).getId();
