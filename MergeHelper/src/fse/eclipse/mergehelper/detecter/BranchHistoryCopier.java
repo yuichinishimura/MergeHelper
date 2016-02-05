@@ -28,6 +28,7 @@ import fse.eclipse.mergehelper.util.ProjectUtil;
 public class BranchHistoryCopier extends AbstractDetector {
 
     private static final String MESSAGE = "Copy History ...";
+    private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new BranchHistoryCopier();
 
     private static final String ENCODING = ResourcesPlugin.getEncoding();
@@ -216,7 +217,7 @@ public class BranchHistoryCopier extends AbstractDetector {
 
     @Override
     protected String getErrorMessage() {
-        return null;
+        return ERROR_MESSAGE;
     }
 
     @Override

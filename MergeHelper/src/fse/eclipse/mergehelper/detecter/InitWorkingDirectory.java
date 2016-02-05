@@ -11,6 +11,7 @@ import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
 public class InitWorkingDirectory extends AbstractDetector {
 
     private static final String MESSAGE = "Clean Working Directory ...";
+    private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new InitWorkingDirectory();
 
     private InitWorkingDirectory() {
@@ -40,7 +41,7 @@ public class InitWorkingDirectory extends AbstractDetector {
 
     @Override
     protected String getErrorMessage() {
-        return null;
+        return ERROR_MESSAGE;
     }
 
     @Override

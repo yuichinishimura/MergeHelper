@@ -21,6 +21,7 @@ import fse.eclipse.mergehelper.util.Parser;
 public class AMergeCorrespondOperation extends AbstractDetector {
 
     private static final String MESSAGE = "Correspond Operation ...";
+    private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new AMergeCorrespondOperation();
 
     private AMergeCorrespondOperation() {
@@ -123,7 +124,7 @@ public class AMergeCorrespondOperation extends AbstractDetector {
 
     @Override
     protected String getErrorMessage() {
-        return null;
+        return ERROR_MESSAGE;
     }
 
     @Override

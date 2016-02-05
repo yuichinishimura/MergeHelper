@@ -31,6 +31,7 @@ import fse.eclipse.mergehelper.util.RepositoryElementInfoUtil;
 public class SliceManager extends AbstractDetector {
 
     private static final String MESSAGE = "Create Operation History Slice ...";
+    private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new SliceManager();
 
     private SliceManager() {
@@ -133,7 +134,7 @@ public class SliceManager extends AbstractDetector {
 
     @Override
     protected String getErrorMessage() {
-        return null;
+        return ERROR_MESSAGE;
     }
 
     @Override
