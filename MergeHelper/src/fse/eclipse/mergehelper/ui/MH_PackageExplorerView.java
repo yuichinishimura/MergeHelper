@@ -119,7 +119,6 @@ public class MH_PackageExplorerView extends PackageExplorerView {
         Action runButton = new Action("MergeHelper-Run", IAction.AS_PUSH_BUTTON) {
             @Override
             public void run() {
-                resultDialogButton.setEnabled(false);
                 ProjectSelectDialog dialog = new ProjectSelectDialog(parent);
                 dialog.show();
             }

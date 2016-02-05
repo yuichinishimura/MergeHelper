@@ -30,11 +30,6 @@ public class ProjectSelectDialog extends AbstractUIDialog {
     }
 
     @Override
-    protected void execute() {
-        // no execute
-    }
-
-    @Override
     protected void nextProgress() {
         String srcName = getSelectionItem(srcTable);
         String destName = getSelectionItem(destTable);
@@ -172,7 +167,7 @@ public class ProjectSelectDialog extends AbstractUIDialog {
 
     /**
      * 指定Tableの選択されているItem(文字列)を返す
-     * 
+     *
      * @param table 指定Table
      * @return 選択されているItem(文字列)
      */

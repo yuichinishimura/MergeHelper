@@ -29,11 +29,6 @@ public class ErrorDialog extends AbstractUIDialog {
     }
 
     @Override
-    protected void execute() {
-        // no execute
-    }
-
-    @Override
     protected void nextProgress() {
         finish();
     }

@@ -1,32 +1,25 @@
 package fse.eclipse.mergehelper.ui.dialog;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
 
 import fse.eclipse.mergehelper.detecter.AbstractDetector;
 import fse.eclipse.mergehelper.detecter.IDetectorState;
 import fse.eclipse.mergehelper.detecter.InitWorkingDirectory;
 import fse.eclipse.mergehelper.ui.MH_PackageExplorerView;
 
-public class ConflictDetectingDialog extends AbstractUIDialog {
+public class ConflictDetectingDialog extends AbstractUIDialog implements IRunnableWithProgress {
 
     private static final String TITLE = "Please Wait";
 
-    private Label pLabel;
-    private ProgressBar pBar;
+    private IProgressMonitor monitor;
 
     ConflictDetectingDialog(Composite parent) {
         super(parent);
-    }
-
-    @Override
-    protected void execute() {
-        AbstractDetector detector = InitWorkingDirectory.getInstance();
-        detector.detect(this);
     }
 
     @Override
@@ -41,18 +34,18 @@ public class ConflictDetectingDialog extends AbstractUIDialog {
 
     @Override
     protected void createDialog() {
-        dialog.setLayout(new GridLayout(1, false));
+        ProgressMonitorDialog pDialog = new ProgressMonitorDialog(null);
+        pDialog.open();
 
-        pLabel = new Label(dialog, SWT.NONE);
-        pLabel.setText("                                                                                                      ");
-        pLabel.setSize(500, 100);
-        pLabel.setLayoutData(grabExFILLGridData());
+        dialog = pDialog.getShell();
+        dialog.setText(TITLE);
+        dialog.update();
 
-        pBar = new ProgressBar(dialog, SWT.SMOOTH);
-        pBar.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
-        pBar.setMinimum(0);
-        pBar.setMaximum(IDetectorState.STATE_NUMBER);
-        pBar.setSelection(0);
+        try {
+            pDialog.run(false, true, this);
+        } catch (InvocationTargetException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -61,21 +54,37 @@ public class ConflictDetectingDialog extends AbstractUIDialog {
     }
 
     public void setMessage(String message) {
-        pLabel.setText(message);
+        monitor.setTaskName(message);
     }
 
     public void incrementProgressBar() {
-        pBar.setSelection(pBar.getSelection() + 1);
+        monitor.worked(1);
     }
 
+    @Override
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        this.monitor = monitor;
+        monitor.beginTask("", IDetectorState.STATE_NUMBER);
+        monitor.setCanceled(false);
+
+        AbstractDetector detector = InitWorkingDirectory.getInstance();
+        detector.detect(this);
+    }
+
+    @Override
+    protected void open() {
+        // no execute
+    };
+
     public void detectSuccess() {
+        monitor.done();
         nextProgress();
     }
 
     public void detectFailed(String errorMessage) {
         ErrorDialog nextDialog = new ErrorDialog(parent, errorMessage);
         nextDialog.show();
-        
+
         finish();
     }
 }

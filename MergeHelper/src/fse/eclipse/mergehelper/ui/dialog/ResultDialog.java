@@ -33,11 +33,6 @@ public class ResultDialog extends AbstractUIDialog {
     }
 
     @Override
-    protected void execute() {
-        // no execute
-    }
-
-    @Override
     protected void nextProgress() {
         finish();
     }

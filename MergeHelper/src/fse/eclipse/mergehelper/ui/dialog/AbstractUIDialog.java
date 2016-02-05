@@ -22,11 +22,6 @@ public abstract class AbstractUIDialog {
     }
 
     /**
-     * 処理
-     */
-    abstract protected void execute();
-
-    /**
      * 遷移
      */
     abstract protected void nextProgress();
@@ -38,6 +33,7 @@ public abstract class AbstractUIDialog {
 
     /**
      * ダイアログのタイトル
+     *
      * @return title
      */
     abstract protected String getDialogTitle();
@@ -46,13 +42,9 @@ public abstract class AbstractUIDialog {
      * ダイアログ生成
      */
     public void show() {
-        createDialog();
         setDialogTitle();
-
-        dialog.pack();
-        dialog.open();
-
-        execute();
+        createDialog();
+        open();
     }
 
     /**
@@ -67,11 +59,17 @@ public abstract class AbstractUIDialog {
      */
     private void setDialogTitle() {
         String title = getDialogTitle();
-        dialog.getShell().setText(title);
+        dialog.setText(title);
+    }
+
+    protected void open() {
+        dialog.pack();
+        dialog.open();
     }
 
     /**
      * grabExcess*Spaceを設定したGridDataを返す
+     *
      * @return grabExcess*Space設定済みGridData
      */
     protected GridData grabExFILLGridData() {
@@ -83,7 +81,9 @@ public abstract class AbstractUIDialog {
 
     /**
      * 指定コンポジットに横線を加えるもの
-     * @param parent 指定コンポジット
+     *
+     * @param parent
+     *            指定コンポジット
      */
     protected void addHorizontalLine() {
         Label labelLine = new Label(dialog, SWT.SEPARATOR | SWT.HORIZONTAL);
