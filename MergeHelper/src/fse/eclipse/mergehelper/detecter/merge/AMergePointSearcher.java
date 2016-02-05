@@ -16,7 +16,6 @@ import fse.eclipse.mergehelper.element.MergePoint;
 import fse.eclipse.mergehelper.element.MergeType;
 import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
 
-// TODO: アルゴリズム改善 + コード綺麗に
 public class AMergePointSearcher extends AbstractDetector {
 
     private static final String MESSAGE = "Search Artificial Merge Point";
@@ -64,8 +63,8 @@ public class AMergePointSearcher extends AbstractDetector {
     private boolean searchPointBeforeConflictElement(ConflictInfo cInfo, ProjectInfo spInfo, ProjectInfo dpInfo) {
         Map<ElementSlice, ElementSlice> elemMap = cInfo.getConflictSliceMap();
         String targetElement = null;
-        int s_point = Integer.MAX_VALUE;
-        int d_point = Integer.MAX_VALUE;
+        int old_s_point = -1;
+        int old_d_point = -1;
 
         for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
             ElementSlice s_slice = entry.getKey();
@@ -74,13 +73,12 @@ public class AMergePointSearcher extends AbstractDetector {
             UnifiedOperation s_op = s_slice.getOperations().get(0);
             UnifiedOperation d_op = d_slice.getOperations().get(0);
 
-            int s_point2 = s_op.getId() - 1;
-            int d_point2 = d_op.getId() - 1;
+            int new_s_point = s_op.getId() - 1;
+            int new_d_point = d_op.getId() - 1;
 
-            if (s_point > s_point2 && d_point > d_point2) {
-                // TODO: 範囲を考慮して改善
-                s_point = s_point2;
-                d_point = d_point2;
+            if (isNarrowPoint(new_s_point, new_d_point, old_s_point, old_d_point)) {
+                old_s_point = new_s_point;
+                old_d_point = new_d_point;
 
                 targetElement = s_slice.getFullName();
                 this.s_slice = s_slice;
@@ -90,7 +88,7 @@ public class AMergePointSearcher extends AbstractDetector {
 
         if (targetElement != null) {
             mPoint = new MergePoint(targetElement);
-            mPoint.setMergePoint(s_point, d_point);
+            mPoint.setMergePoint(old_s_point, old_d_point);
             return true;
         }
         return false;
@@ -113,8 +111,9 @@ public class AMergePointSearcher extends AbstractDetector {
                         String d_body = d_slice.getBody(d_id);
 
                         if (s_body.equals(d_body)) {
-                            // TODO: 範囲を考慮して改善
-                            mPoint.setMergePoint(s_id, d_id);
+                            if (isNarrowPoint(s_id, d_id)) {
+                                mPoint.setMergePoint(s_id, d_id);
+                            }
                         }
                     }
                 }
@@ -148,6 +147,20 @@ public class AMergePointSearcher extends AbstractDetector {
             }
         }
         return ss;
+    }
+
+    private boolean isNarrowPoint(int s_point, int d_point) {
+        int old_s_point = mPoint.getMergePoint(MergeType.SRC);
+        int old_d_point = mPoint.getMergePoint(MergeType.DEST);
+
+        return isNarrowPoint(s_point, d_point, old_s_point, old_d_point);
+    }
+
+    private boolean isNarrowPoint(int new_s_point, int new_d_point, int old_s_point, int old_d_point) {
+        int newPoint = new_s_point + new_d_point;
+        int oldPoint = old_s_point + old_d_point;
+
+        return newPoint > oldPoint;
     }
 
     @Override
