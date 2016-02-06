@@ -10,25 +10,25 @@ public class BranchRootInfo {
     private static BranchRootInfo instance;
 
     private final IProject project;
-    private final BranchInfo srcInfo, destInfo;
+    private final BranchInfo acceptInfo, joinInfo;
 
     private ConflictInfo cInfo;
     private MergePoint mPoint;
 
-    private BranchRootInfo(IProject project, String srcName, String destName) {
+    private BranchRootInfo(IProject project, String acceptName, String joinName) {
         this.project = project;
-        srcInfo = new BranchInfo(srcName, MergeType.SRC);
-        destInfo = new BranchInfo(destName, MergeType.DEST);
+        acceptInfo = new BranchInfo(acceptName, MergeType.ACCEPT);
+        joinInfo = new BranchInfo(joinName, MergeType.JOIN);
     }
 
-    public static BranchRootInfo create(IProject project, String srcName, String destName) {
-        instance = new BranchRootInfo(project, srcName, destName);
+    public static BranchRootInfo create(IProject project, String acceptName, String joinName) {
+        instance = new BranchRootInfo(project, acceptName, joinName);
         return instance;
     }
 
     public static BranchRootInfo getInstance() {
         if (instance == null) {
-            System.err.println("GitProjectInfo instance is Null");
+            System.err.println("BranchRootInfo instance is Null");
         }
         return instance;
     }
@@ -42,10 +42,10 @@ public class BranchRootInfo {
     }
 
     public BranchInfo getBranchInfo(MergeType type) {
-        if (MergeType.isMergeSrc(type)) {
-            return srcInfo;
+        if (MergeType.isAccept(type)) {
+            return acceptInfo;
         } else {
-            return destInfo;
+            return joinInfo;
         }
     }
 
@@ -54,10 +54,10 @@ public class BranchRootInfo {
     }
 
     public MergeType getType(String branchName) {
-        if (srcInfo.getName().equals(branchName)) {
-            return MergeType.SRC;
-        } else if (destInfo.getName().equals(branchName)) {
-            return MergeType.DEST;
+        if (acceptInfo.getName().equals(branchName)) {
+            return MergeType.ACCEPT;
+        } else if (joinInfo.getName().equals(branchName)) {
+            return MergeType.JOIN;
         } else {
             return null;
         }
@@ -65,10 +65,10 @@ public class BranchRootInfo {
 
     public BranchFileInfo getBranchFileInfo(FileInfo fInfo) {
         String branchName = RepositoryElementInfoUtil.getBranchName(fInfo);
-        if (srcInfo.getName().equals(branchName)) {
-            return srcInfo.getBranchFileInfo(fInfo);
-        } else if (destInfo.getName().equals(branchName)) {
-            return destInfo.getBranchFileInfo(fInfo);
+        if (acceptInfo.getName().equals(branchName)) {
+            return acceptInfo.getBranchFileInfo(fInfo);
+        } else if (joinInfo.getName().equals(branchName)) {
+            return joinInfo.getBranchFileInfo(fInfo);
         } else {
             return null;
         }

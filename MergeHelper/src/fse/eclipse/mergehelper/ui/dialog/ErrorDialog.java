@@ -76,26 +76,26 @@ public class ErrorDialog extends AbstractUIDialog {
 
     private String createDetailText() {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo srcInfo = rootInfo.getBranchInfo(MergeType.SRC);
-        BranchInfo destInfo = rootInfo.getBranchInfo(MergeType.DEST);
+        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
         String projectName = rootInfo.getName();
-        String srcName = srcInfo.getName();
-        String destName = destInfo.getName();
+        String acceptName = acceptInfo.getName();
+        String joinName = joinInfo.getName();
 
         StringBuilder sb = new StringBuilder();
         sb.append("Project: ").append(projectName).append("\n");
-        sb.append("Branch: ").append(srcName).append(" , ").append(destName).append("\n");
+        sb.append("Branch: ").append(acceptName).append(" , ").append(joinName).append("\n");
 
         sb.append("\n");
 
-        sb.append(srcName).append("-Slice:\n");
-        for (ElementSlice slice : srcInfo.getAllSlice()) {
+        sb.append(acceptName).append("-Slice:\n");
+        for (ElementSlice slice : acceptInfo.getAllSlice()) {
             sb.append(slice).append("\n");
         }
         sb.append("\n");
-        sb.append(destName).append("-Slice\n");
-        for (ElementSlice slice : destInfo.getAllSlice()) {
+        sb.append(joinName).append("-Slice\n");
+        for (ElementSlice slice : joinInfo.getAllSlice()) {
             sb.append(slice).append("\n");
         }
         sb.append("\n");
@@ -119,8 +119,8 @@ public class ErrorDialog extends AbstractUIDialog {
             return sb.toString();
         }
 
-        sb.append("Merge Point: ").append(srcName).append("-").append(mPoint.getMergePoint(MergeType.SRC));
-        sb.append(" , ").append(destName).append("-").append(mPoint.getMergePoint(MergeType.DEST));
+        sb.append("Merge Point: ").append(acceptName).append("-").append(mPoint.getMergePoint(MergeType.ACCEPT));
+        sb.append(" , ").append(joinName).append("-").append(mPoint.getMergePoint(MergeType.JOIN));
         sb.append("\n");
         sb.append("Target Element: ").append(mPoint.getTargetElement());
         return sb.toString();

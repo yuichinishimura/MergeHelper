@@ -29,19 +29,19 @@ public class ConflictDetector extends AbstractDetector {
     @Override
     public void execute(ConflictDetectingDialog dialog) {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo srcInfo = rootInfo.getBranchInfo(MergeType.SRC);
-        BranchInfo destInfo = rootInfo.getBranchInfo(MergeType.DEST);
+        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
-        List<BranchFileInfo> sbfInfos = srcInfo.getAllBranchFileInfo();
-        List<BranchFileInfo> dbfInfos = destInfo.getAllBranchFileInfo();
+        List<BranchFileInfo> abfInfos = acceptInfo.getAllBranchFileInfo();
+        List<BranchFileInfo> jbfInfos = joinInfo.getAllBranchFileInfo();
 
         ConflictInfo cInfo = new ConflictInfo();
-        for (BranchFileInfo sbfInfo : sbfInfos) {
-            String sName = sbfInfo.getFullName();
-            for (BranchFileInfo dbfInfo : dbfInfos) {
-                String dName = dbfInfo.getFullName();
-                if (sName.equals(dName)) {
-                    detectElement(sbfInfo, dbfInfo, cInfo);
+        for (BranchFileInfo abfInfo : abfInfos) {
+            String aName = abfInfo.getFullName();
+            for (BranchFileInfo jbfInfo : jbfInfos) {
+                String jName = jbfInfo.getFullName();
+                if (aName.equals(jName)) {
+                    detectElement(abfInfo, jbfInfo, cInfo);
                     break;
                 }
             }
@@ -50,14 +50,14 @@ public class ConflictDetector extends AbstractDetector {
         rootInfo.setConflictInfo(cInfo);
     }
 
-    private void detectElement(BranchFileInfo sbfInfo, BranchFileInfo dbfInfo, ConflictInfo cInfo) {
-        List<ElementSlice> sslices = sbfInfo.getAllSlice();
-        List<ElementSlice> dslices = dbfInfo.getAllSlice();
+    private void detectElement(BranchFileInfo abfInfo, BranchFileInfo jbfInfo, ConflictInfo cInfo) {
+        List<ElementSlice> aslices = abfInfo.getAllSlice();
+        List<ElementSlice> jslices = jbfInfo.getAllSlice();
 
-        for (ElementSlice sslice : sslices) {
-            for (ElementSlice dslice : dslices) {
-                if (ElementSlice.equalSliceName(sslice, dslice)) {
-                    cInfo.addConflictElements(sslice, dslice);
+        for (ElementSlice aslice : aslices) {
+            for (ElementSlice jslice : jslices) {
+                if (ElementSlice.equalSliceName(aslice, jslice)) {
+                    cInfo.addConflictElements(aslice, jslice);
                     break;
                 }
             }

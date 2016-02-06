@@ -23,7 +23,7 @@ public class AMergePointSearcher extends AbstractDetector {
     private static AbstractDetector instance = new AMergePointSearcher();
 
     private MergePoint mPoint;
-    private ElementSlice s_slice, d_slice;
+    private ElementSlice a_slice, j_slice;
 
     private boolean isFind;
 
@@ -38,81 +38,82 @@ public class AMergePointSearcher extends AbstractDetector {
     public void execute(ConflictDetectingDialog dialog) {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
         ConflictInfo cInfo = rootInfo.getConflictInfo();
-        ProjectInfo s_pInfo = rootInfo.getBranchInfo(MergeType.SRC).getProjectInfo();
-        ProjectInfo d_pInfo = rootInfo.getBranchInfo(MergeType.DEST).getProjectInfo();
 
-        isFind = searchPointBeforeConflictElement(cInfo, s_pInfo, d_pInfo);
+        isFind = searchPointBeforeConflictElement(cInfo);
         if (!isFind) {
             return;
         }
 
-        int s_point = mPoint.getMergePoint(MergeType.SRC) + 1;
-        int d_point = mPoint.getMergePoint(MergeType.DEST) + 1;
+        ProjectInfo a_pInfo = rootInfo.getBranchInfo(MergeType.ACCEPT).getProjectInfo();
+        ProjectInfo j_pInfo = rootInfo.getBranchInfo(MergeType.JOIN).getProjectInfo();
 
-        List<ElementSlice> s_slices = rootInfo.getBranchInfo(MergeType.SRC).getAllSlice();
-        int s_limit = searchPointRange(cInfo, s_pInfo, s_slices, s_point);
+        int a_point = mPoint.getMergePoint(MergeType.ACCEPT) + 1;
+        int j_point = mPoint.getMergePoint(MergeType.JOIN) + 1;
 
-        List<ElementSlice> d_slices = rootInfo.getBranchInfo(MergeType.DEST).getAllSlice();
-        int d_limit = searchPointRange(cInfo, d_pInfo, d_slices, d_point);
+        List<ElementSlice> a_slices = rootInfo.getBranchInfo(MergeType.ACCEPT).getAllSlice();
+        int a_limit = searchPointRange(cInfo, a_pInfo, a_slices, a_point);
 
-        searchPointEqualBody(cInfo, s_pInfo, d_pInfo, s_point, s_limit, d_point, d_limit);
+        List<ElementSlice> j_slices = rootInfo.getBranchInfo(MergeType.JOIN).getAllSlice();
+        int j_limit = searchPointRange(cInfo, j_pInfo, j_slices, j_point);
+
+        searchPointEqualBody(cInfo, a_pInfo, j_pInfo, a_point, a_limit, j_point, j_limit);
 
         rootInfo.setMergePoint(mPoint);
     }
 
-    private boolean searchPointBeforeConflictElement(ConflictInfo cInfo, ProjectInfo spInfo, ProjectInfo dpInfo) {
+    private boolean searchPointBeforeConflictElement(ConflictInfo cInfo) {
         Map<ElementSlice, ElementSlice> elemMap = cInfo.getConflictSliceMap();
         String targetElement = null;
-        int old_s_point = -1;
-        int old_d_point = -1;
+        int old_a_point = -1;
+        int old_j_point = -1;
 
         for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
-            ElementSlice s_slice = entry.getKey();
-            ElementSlice d_slice = entry.getValue();
+            ElementSlice a_slice = entry.getKey();
+            ElementSlice j_slice = entry.getValue();
 
-            UnifiedOperation s_op = s_slice.getOperations().get(0);
-            UnifiedOperation d_op = d_slice.getOperations().get(0);
+            UnifiedOperation a_op = a_slice.getOperations().get(0);
+            UnifiedOperation j_op = j_slice.getOperations().get(0);
 
-            int new_s_point = s_op.getId() - 1;
-            int new_d_point = d_op.getId() - 1;
+            int new_a_point = a_op.getId() - 1;
+            int new_j_point = j_op.getId() - 1;
 
-            if (isNarrowPoint(new_s_point, new_d_point, old_s_point, old_d_point)) {
-                old_s_point = new_s_point;
-                old_d_point = new_d_point;
+            if (isNarrowPoint(new_a_point, new_j_point, old_a_point, old_j_point)) {
+                old_a_point = new_a_point;
+                old_j_point = new_j_point;
 
-                targetElement = s_slice.getFullName();
-                this.s_slice = s_slice;
-                this.d_slice = d_slice;
+                targetElement = a_slice.getFullName();
+                this.a_slice = a_slice;
+                this.j_slice = j_slice;
             }
         }
 
         if (targetElement != null) {
             mPoint = new MergePoint(targetElement);
-            mPoint.setMergePoint(old_s_point, old_d_point);
+            mPoint.setMergePoint(old_a_point, old_j_point);
             return true;
         }
         return false;
     }
 
-    private void searchPointEqualBody(ConflictInfo cInfo, ProjectInfo s_pInfo, ProjectInfo d_pInfo, int s_idx, int s_limit, int d_idx, int d_limit) {
-        List<UnifiedOperation> s_ops = s_pInfo.getOperations();
-        List<UnifiedOperation> d_ops = d_pInfo.getOperations();
+    private void searchPointEqualBody(ConflictInfo cInfo, ProjectInfo a_pInfo, ProjectInfo j_pInfo, int a_idx, int a_limit, int j_idx, int j_limit) {
+        List<UnifiedOperation> a_ops = a_pInfo.getOperations();
+        List<UnifiedOperation> j_ops = j_pInfo.getOperations();
 
-        for (int i = s_idx; i < s_limit; i++) {
-            UnifiedOperation s_op = s_ops.get(i);
-            if (s_slice.contains(s_op)) {
-                int s_id = s_op.getId();
-                String s_body = s_slice.getBody(s_id);
+        for (int i = a_idx; i < a_limit; i++) {
+            UnifiedOperation a_op = a_ops.get(i);
+            if (a_slice.contains(a_op)) {
+                int a_id = a_op.getId();
+                String a_body = a_slice.getBody(a_id);
 
-                for (int j = d_idx; j < d_limit; j++) {
-                    UnifiedOperation d_op = d_ops.get(j);
-                    if (d_slice.contains(d_op)) {
-                        int d_id = d_op.getId();
-                        String d_body = d_slice.getBody(d_id);
+                for (int j = j_idx; j < j_limit; j++) {
+                    UnifiedOperation j_op = j_ops.get(j);
+                    if (j_slice.contains(j_op)) {
+                        int j_id = j_op.getId();
+                        String j_body = j_slice.getBody(j_id);
 
-                        if (s_body.equals(d_body)) {
-                            if (isNarrowPoint(s_id, d_id)) {
-                                mPoint.setMergePoint(s_id, d_id);
+                        if (a_body.equals(j_body)) {
+                            if (isNarrowPoint(a_id, j_id)) {
+                                mPoint.setMergePoint(a_id, j_id);
                             }
                         }
                     }
@@ -149,16 +150,16 @@ public class AMergePointSearcher extends AbstractDetector {
         return ss;
     }
 
-    private boolean isNarrowPoint(int s_point, int d_point) {
-        int old_s_point = mPoint.getMergePoint(MergeType.SRC);
-        int old_d_point = mPoint.getMergePoint(MergeType.DEST);
+    private boolean isNarrowPoint(int a_point, int j_point) {
+        int old_a_point = mPoint.getMergePoint(MergeType.ACCEPT);
+        int old_j_point = mPoint.getMergePoint(MergeType.JOIN);
 
-        return isNarrowPoint(s_point, d_point, old_s_point, old_d_point);
+        return isNarrowPoint(a_point, j_point, old_a_point, old_j_point);
     }
 
-    private boolean isNarrowPoint(int new_s_point, int new_d_point, int old_s_point, int old_d_point) {
-        int newPoint = new_s_point + new_d_point;
-        int oldPoint = old_s_point + old_d_point;
+    private boolean isNarrowPoint(int new_a_point, int new_j_point, int old_a_point, int old_j_point) {
+        int newPoint = new_a_point + new_j_point;
+        int oldPoint = old_a_point + old_j_point;
 
         return newPoint > oldPoint;
     }

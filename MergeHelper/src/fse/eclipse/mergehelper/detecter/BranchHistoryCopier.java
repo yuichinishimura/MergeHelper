@@ -43,8 +43,8 @@ public class BranchHistoryCopier extends AbstractDetector {
     @Override
     public void execute(ConflictDetectingDialog dialog) {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        copy(rootInfo, MergeType.SRC);
-        copy(rootInfo, MergeType.DEST);
+        copy(rootInfo, MergeType.ACCEPT);
+        copy(rootInfo, MergeType.JOIN);
     }
 
     private void copy(BranchRootInfo rootInfo, MergeType type) {
@@ -55,21 +55,21 @@ public class BranchHistoryCopier extends AbstractDetector {
         sb.append(File.separator).append(branchName);
         String historyPath = sb.toString();
 
-        if (MergeType.isMergeSrc(type)) {
+        if (MergeType.isAccept(type)) {
             int length = sb.length();
             sb.delete(length - branchName.length(), length);
-            sb.append(rootInfo.getBranchName(MergeType.DEST));
-            String destHistoryPath = sb.toString();
+            sb.append(rootInfo.getBranchName(MergeType.JOIN));
+            String joinHistoryPath = sb.toString();
 
-            copyFromSrcDir(historyPath, destHistoryPath, branchName);
+            copyFromAcceptDir(historyPath, joinHistoryPath, branchName);
         } else {
-            copyFromDestDir(historyPath, branchName);
+            copyFromJoinDir(historyPath, branchName);
         }
     }
 
-    private void copyFromSrcDir(String historyPath, String destHistoryPath, String name) {
+    private void copyFromAcceptDir(String historyPath, String joinHistoryPath, String name) {
         String parentId = null;
-        File[] files = new File(destHistoryPath).listFiles();
+        File[] files = new File(joinHistoryPath).listFiles();
         for (File file : files) {
             if (file.getName().endsWith(XmlCommitWriter.CommitXmlFileName)) {
                 parentId = convertCommitOperation(file).getParentCommitId();
@@ -94,7 +94,7 @@ public class BranchHistoryCopier extends AbstractDetector {
         }
     }
 
-    private void copyFromDestDir(String historyPath, String name) {
+    private void copyFromJoinDir(String historyPath, String name) {
         File[] files = new File(historyPath).listFiles();
         for (File file : files) {
             copyFromFile(file, name);

@@ -47,10 +47,10 @@ public class AMerge extends AbstractDetector {
 
         Git git = init(rootInfo);
         try {
-            commit(git, mPoint.getMergePoint(MergeType.SRC), rootInfo.getBranchInfo(MergeType.SRC));
-            commit(git, mPoint.getMergePoint(MergeType.DEST), rootInfo.getBranchInfo(MergeType.DEST));
+            commit(git, mPoint.getMergePoint(MergeType.ACCEPT), rootInfo.getBranchInfo(MergeType.ACCEPT));
+            commit(git, mPoint.getMergePoint(MergeType.JOIN), rootInfo.getBranchInfo(MergeType.JOIN));
 
-            Ref ref = git.getRepository().getRef(rootInfo.getBranchInfo(MergeType.SRC).getName());
+            Ref ref = git.getRepository().getRef(rootInfo.getBranchInfo(MergeType.ACCEPT).getName());
             isMergeSuccess = git.merge().include(ref).call().getMergeStatus().isSuccessful();
         } catch (GitAPIException | IOException e) {
             e.printStackTrace();
@@ -63,11 +63,11 @@ public class AMerge extends AbstractDetector {
             Git.init().setDirectory(dir).call();
             Git git = Git.open(dir);
 
-            BranchInfo srcInfo = rootInfo.getBranchInfo(MergeType.SRC);
-            String branchName = srcInfo.getName();
+            BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+            String branchName = acceptInfo.getName();
 
-            ProjectInfo s_pInfo = srcInfo.getProjectInfo();
-            List<FileInfo> fInfos = s_pInfo.getAllFileInfo();
+            ProjectInfo a_pInfo = acceptInfo.getProjectInfo();
+            List<FileInfo> fInfos = a_pInfo.getAllFileInfo();
             for (FileInfo fInfo : fInfos) {
                 String filePath = createMergePath(fInfo, branchName);
                 FileStream.write(filePath, fInfo.getCode(0));
@@ -79,15 +79,15 @@ public class AMerge extends AbstractDetector {
             // master
             String nowBranchName = git.getRepository().getBranch();
 
-            String s_BranchName = rootInfo.getBranchName(MergeType.SRC);
-            String d_BranchName = rootInfo.getBranchName(MergeType.DEST);
+            String a_BranchName = rootInfo.getBranchName(MergeType.ACCEPT);
+            String j_BranchName = rootInfo.getBranchName(MergeType.JOIN);
 
-            if (!nowBranchName.equals(s_BranchName)) {
-                git.branchCreate().setName(s_BranchName).call();
+            if (!nowBranchName.equals(a_BranchName)) {
+                git.branchCreate().setName(a_BranchName).call();
             }
 
-            if (!nowBranchName.equals(d_BranchName)) {
-                git.branchCreate().setName(d_BranchName).call();
+            if (!nowBranchName.equals(j_BranchName)) {
+                git.branchCreate().setName(j_BranchName).call();
             }
 
             return git;

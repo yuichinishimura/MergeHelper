@@ -22,7 +22,7 @@ public class ProjectSelectDialog extends AbstractUIDialog {
     private static final String TITLE = "MergeHelper";
 
     private IProject project;
-    private Table projTable, srcTable, destTable;
+    private Table projTable, acceptTable, joinTable;
     private Button okButton;
 
     public ProjectSelectDialog(Composite parent) {
@@ -31,10 +31,10 @@ public class ProjectSelectDialog extends AbstractUIDialog {
 
     @Override
     protected void nextProgress() {
-        String srcName = getSelectionItem(srcTable);
-        String destName = getSelectionItem(destTable);
+        String acceptName = getSelectionItem(acceptTable);
+        String joinName = getSelectionItem(joinTable);
 
-        BranchRootInfo.create(project, srcName, destName);
+        BranchRootInfo.create(project, acceptName, joinName);
 
         ConflictDetectingDialog nextDialog = new ConflictDetectingDialog(parent);
         nextDialog.show();
@@ -64,7 +64,7 @@ public class ProjectSelectDialog extends AbstractUIDialog {
                 project = ProjectUtil.convertIProject(projName);
 
                 List<String> nameList = ProjectUtil.getBranchHistoryNameList(project);
-                setBranchNameTableItem(srcTable, nameList);
+                setBranchNameTableItem(acceptTable, nameList);
             }
 
             @Override
@@ -75,23 +75,23 @@ public class ProjectSelectDialog extends AbstractUIDialog {
 
         addHorizontalLine();
 
-        Label srcBranchLabel = new Label(dialog, SWT.NONE);
-        srcBranchLabel.setText("Please select the branch which is targeted for merge.");
-        srcBranchLabel.setLayoutData(grabExFILLGridData());
+        Label acceptBranchLabel = new Label(dialog, SWT.NONE);
+        acceptBranchLabel.setText("Please select the branch which is targeted for merge.");
+        acceptBranchLabel.setLayoutData(grabExFILLGridData());
 
-        srcTable = new Table(dialog, SWT.SINGLE | SWT.FULL_SELECTION);
-        GridData srcTableData = grabExFILLGridData();
-        srcTableData.heightHint = tableHeight;
-        srcTableData.widthHint = tableWidth / 2;
-        srcTable.setLayoutData(srcTableData);
-        srcTable.addSelectionListener(new SelectionListener() {
+        acceptTable = new Table(dialog, SWT.SINGLE | SWT.FULL_SELECTION);
+        GridData acceptTableData = grabExFILLGridData();
+        acceptTableData.heightHint = tableHeight;
+        acceptTableData.widthHint = tableWidth / 2;
+        acceptTable.setLayoutData(acceptTableData);
+        acceptTable.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 okButton.setEnabled(false);
 
                 List<String> nameList = ProjectUtil.getBranchHistoryNameList(project);
-                nameList.remove(getSelectionItem(srcTable));
-                setBranchNameTableItem(destTable, nameList);
+                nameList.remove(getSelectionItem(acceptTable));
+                setBranchNameTableItem(joinTable, nameList);
             }
 
             @Override
@@ -99,16 +99,16 @@ public class ProjectSelectDialog extends AbstractUIDialog {
             }
         });
 
-        Label destBranchLabel = new Label(dialog, SWT.NONE);
-        destBranchLabel.setText("Please select the another branch.");
-        destBranchLabel.setLayoutData(grabExFILLGridData());
+        Label joinBranchLabel = new Label(dialog, SWT.NONE);
+        joinBranchLabel.setText("Please select the another branch.");
+        joinBranchLabel.setLayoutData(grabExFILLGridData());
 
-        destTable = new Table(dialog, SWT.SINGLE | SWT.FULL_SELECTION);
-        GridData destTableData = grabExFILLGridData();
-        destTableData.heightHint = tableHeight;
-        destTableData.widthHint = tableWidth / 2;
-        destTable.setLayoutData(destTableData);
-        destTable.addSelectionListener(new SelectionListener() {
+        joinTable = new Table(dialog, SWT.SINGLE | SWT.FULL_SELECTION);
+        GridData joinTableData = grabExFILLGridData();
+        joinTableData.heightHint = tableHeight;
+        joinTableData.widthHint = tableWidth / 2;
+        joinTable.setLayoutData(joinTableData);
+        joinTable.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 okButton.setEnabled(true);

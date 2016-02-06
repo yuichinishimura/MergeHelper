@@ -32,8 +32,8 @@ public class ConflictInfo {
         return Collections.unmodifiableList(elemNames);
     }
 
-    public void addConflictElements(ElementSlice sslice, ElementSlice dslice) {
-        elemMap.put(sslice, dslice);
+    public void addConflictElements(ElementSlice aslice, ElementSlice jslice) {
+        elemMap.put(aslice, jslice);
     }
 
     public boolean isConflict() {

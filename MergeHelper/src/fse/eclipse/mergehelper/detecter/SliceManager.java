@@ -48,19 +48,19 @@ public class SliceManager extends AbstractDetector {
         WorkspaceInfo wInfo = rManager.getWorkspaceInfo();
 
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo srcInfo = rootInfo.getBranchInfo(MergeType.SRC);
-        BranchInfo destInfo = rootInfo.getBranchInfo(MergeType.DEST);
+        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
         List<ProjectInfo> pInfos = wInfo.getAllProjectInfo();
         for (ProjectInfo pInfo : pInfos) {
             String name = RepositoryElementInfoUtil.getBranchName(pInfo);
 
-            if (name.equals(srcInfo.getName())) {
-                srcInfo.setProjectInfo(pInfo);
-                addBranchFileInfo(srcInfo, pInfo);
-            } else if (name.equals(destInfo.getName())) {
-                destInfo.setProjectInfo(pInfo);
-                addBranchFileInfo(destInfo, pInfo);
+            if (name.equals(acceptInfo.getName())) {
+                acceptInfo.setProjectInfo(pInfo);
+                addBranchFileInfo(acceptInfo, pInfo);
+            } else if (name.equals(joinInfo.getName())) {
+                joinInfo.setProjectInfo(pInfo);
+                addBranchFileInfo(joinInfo, pInfo);
             } else {
                 System.err.println("not found project name: '" + pInfo.getQualifiedName() + "'");
             }

@@ -2,27 +2,27 @@ package fse.eclipse.mergehelper.element;
 
 public enum MergeType {
 
-    SRC, DEST;
+    ACCEPT, JOIN;
 
-    public static boolean isMergeSrc(MergeType type) {
+    public static boolean isAccept(MergeType type) {
         if (type == null) {
             throw new Error("MergeType is Null");
         }
-        return type == SRC;
+        return type == ACCEPT;
     }
 
-    public static boolean isMergeDest(MergeType type) {
+    public static boolean isJoin(MergeType type) {
         if (type == null) {
             throw new Error("MergeType is Null");
         }
-        return type == DEST;
+        return type == JOIN;
     }
 
     public static MergeType getAnotherType(MergeType type) {
-        if (isMergeSrc(type)) {
-            return DEST;
+        if (isAccept(type)) {
+            return JOIN;
         } else {
-            return SRC;
+            return ACCEPT;
         }
     }
 }

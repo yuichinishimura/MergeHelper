@@ -42,16 +42,16 @@ public class ResultDialog extends AbstractUIDialog {
         dialog.setLayout(new GridLayout(1, false));
 
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo srcInfo = rootInfo.getBranchInfo(MergeType.SRC);
-        BranchInfo destInfo = rootInfo.getBranchInfo(MergeType.DEST);
+        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
         StringBuilder sb = new StringBuilder();
         sb.append("Total number of operations\n");
-        sb.append(srcInfo.getName()).append(":");
-        sb.append(srcInfo.getProjectInfo().getOperationNumber()).append("\n");
+        sb.append(acceptInfo.getName()).append(":");
+        sb.append(acceptInfo.getProjectInfo().getOperationNumber()).append("\n");
 
-        sb.append(destInfo.getName()).append(":");
-        sb.append(destInfo.getProjectInfo().getOperationNumber()).append("\n");
+        sb.append(joinInfo.getName()).append(":");
+        sb.append(joinInfo.getProjectInfo().getOperationNumber()).append("\n");
 
         sb.append("\n");
 
@@ -69,15 +69,15 @@ public class ResultDialog extends AbstractUIDialog {
         elemColumn.setWidth(230);
         elemColumn.setResizable(true);
 
-        TableColumn srcPoint = new TableColumn(elemTable, SWT.LEFT);
-        srcPoint.setText(srcInfo.getName());
-        srcPoint.setWidth(170);
-        srcPoint.setResizable(true);
+        TableColumn acceptPoint = new TableColumn(elemTable, SWT.LEFT);
+        acceptPoint.setText(acceptInfo.getName());
+        acceptPoint.setWidth(170);
+        acceptPoint.setResizable(true);
 
-        TableColumn destPoint = new TableColumn(elemTable, SWT.LEFT);
-        destPoint.setText(destInfo.getName());
-        destPoint.setWidth(170);
-        destPoint.setResizable(true);
+        TableColumn joinPoint = new TableColumn(elemTable, SWT.LEFT);
+        joinPoint.setText(joinInfo.getName());
+        joinPoint.setWidth(170);
+        joinPoint.setResizable(true);
 
         GridData elemTableData = grabExFILLGridData();
         elemTableData.heightHint = tableHeight * 3 / 2;
@@ -88,19 +88,19 @@ public class ResultDialog extends AbstractUIDialog {
         addHorizontalLine();
 
         MergePoint mPoint = rootInfo.getMergePoint();
-        int s_point = mPoint.getMergePoint(MergeType.SRC);
-        UnifiedOperation s_op = srcInfo.getProjectInfo().getOperation(s_point);
+        int a_point = mPoint.getMergePoint(MergeType.ACCEPT);
+        UnifiedOperation a_op = acceptInfo.getProjectInfo().getOperation(a_point);
 
-        int d_point = mPoint.getMergePoint(MergeType.DEST);
-        UnifiedOperation d_op = destInfo.getProjectInfo().getOperation(d_point);
+        int j_point = mPoint.getMergePoint(MergeType.JOIN);
+        UnifiedOperation j_op = joinInfo.getProjectInfo().getOperation(j_point);
 
         StringBuilder sb2 = new StringBuilder();
         sb2.append("Artificial Merge Result\n");
-        sb2.append(srcInfo.getName()).append(":");
-        sb2.append(createTextOpRepresentation(s_op)).append("\n");
+        sb2.append(acceptInfo.getName()).append(":");
+        sb2.append(createTextOpRepresentation(a_op)).append("\n");
 
-        sb2.append(destInfo.getName()).append(":");
-        sb2.append(createTextOpRepresentation(d_op)).append("\n");
+        sb2.append(joinInfo.getName()).append(":");
+        sb2.append(createTextOpRepresentation(j_op)).append("\n");
         Label mergeLabel = new Label(dialog, SWT.NONE);
         mergeLabel.setText(sb2.toString());
         mergeLabel.setLayoutData(grabExFILLGridData());
@@ -136,16 +136,16 @@ public class ResultDialog extends AbstractUIDialog {
 
         Map<ElementSlice, ElementSlice> confMap = cInfo.getConflictSliceMap();
         for (Entry<ElementSlice, ElementSlice> entry : confMap.entrySet()) {
-            ElementSlice s_slice = entry.getKey();
-            ElementSlice d_slice = entry.getValue();
+            ElementSlice a_slice = entry.getKey();
+            ElementSlice j_slice = entry.getValue();
 
-            UnifiedOperation s_op = s_slice.getOperations().get(0);
-            UnifiedOperation d_op = d_slice.getOperations().get(0);
+            UnifiedOperation a_op = a_slice.getOperations().get(0);
+            UnifiedOperation j_op = j_slice.getOperations().get(0);
 
             item = new TableItem(elemTable, SWT.NONE);
-            item.setText(0, s_slice.getFullName());
-            item.setText(1, createTextOpRepresentation(s_op));
-            item.setText(2, createTextOpRepresentation(d_op));
+            item.setText(0, a_slice.getFullName());
+            item.setText(1, createTextOpRepresentation(a_op));
+            item.setText(2, createTextOpRepresentation(j_op));
         }
     }
 

@@ -36,11 +36,11 @@ public class AMergeCorrespondOperation extends AbstractDetector {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
         MergePoint mPoint = rootInfo.getMergePoint();
 
-        int point = mPoint.getMergePoint(MergeType.SRC);
-        correspond(rootInfo.getBranchInfo(MergeType.SRC), point);
+        int point = mPoint.getMergePoint(MergeType.ACCEPT);
+        correspond(rootInfo.getBranchInfo(MergeType.ACCEPT), point);
 
-        point = mPoint.getMergePoint(MergeType.DEST);
-        correspond(rootInfo.getBranchInfo(MergeType.DEST), point);
+        point = mPoint.getMergePoint(MergeType.JOIN);
+        correspond(rootInfo.getBranchInfo(MergeType.JOIN), point);
     }
 
     private void correspond(BranchInfo bInfo, int point) {
