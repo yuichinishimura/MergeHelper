@@ -1,4 +1,4 @@
-package fse.eclipse.mergehelper.detecter;
+package fse.eclipse.mergehelper.detector;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import fse.eclipse.mergehelper.Activator;
 import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
 
 public class InitWorkingDirectory extends AbstractDetector {
-
     private static final String MESSAGE = "Clean Working Directory ...";
     private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new InitWorkingDirectory();
@@ -22,15 +21,16 @@ public class InitWorkingDirectory extends AbstractDetector {
     }
 
     @Override
-    public void execute(ConflictDetectingDialog dialog) {
+    public void execute() {
         File dir = Activator.getWorkingDir();
-        if (!dir.exists()) {
+        if (dir.exists()) {
+            try {
+                FileUtils.cleanDirectory(dir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
             dir.mkdirs();
-        }
-        try {
-            FileUtils.cleanDirectory(dir);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

@@ -12,14 +12,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 import fse.eclipse.mergehelper.element.BranchInfo;
+import fse.eclipse.mergehelper.element.BranchJavaElement;
 import fse.eclipse.mergehelper.element.BranchRootInfo;
 import fse.eclipse.mergehelper.element.ConflictInfo;
-import fse.eclipse.mergehelper.element.ElementSlice;
 import fse.eclipse.mergehelper.element.MergePoint;
 import fse.eclipse.mergehelper.element.MergeType;
 
-public class ErrorDialog extends AbstractUIDialog {
-
+public class ErrorDialog extends AbstractMHDialog {
     private static final String TITLE = "Detecion Failed";
     private final String errorMessage;
 
@@ -76,12 +75,12 @@ public class ErrorDialog extends AbstractUIDialog {
 
     private String createDetailText() {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
-        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
+        BranchInfo a_bInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo j_bInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
         String projectName = rootInfo.getName();
-        String acceptName = acceptInfo.getName();
-        String joinName = joinInfo.getName();
+        String acceptName = a_bInfo.getName();
+        String joinName = j_bInfo.getName();
 
         StringBuilder sb = new StringBuilder();
         sb.append("Project: ").append(projectName).append("\n");
@@ -89,14 +88,14 @@ public class ErrorDialog extends AbstractUIDialog {
 
         sb.append("\n");
 
-        sb.append(acceptName).append("-Slice:\n");
-        for (ElementSlice slice : acceptInfo.getAllSlice()) {
-            sb.append(slice).append("\n");
+        sb.append(acceptName).append("-Element:\n");
+        for (BranchJavaElement elem : a_bInfo.getAllBranchJavaElement()) {
+            sb.append(elem).append("\n");
         }
         sb.append("\n");
-        sb.append(joinName).append("-Slice\n");
-        for (ElementSlice slice : joinInfo.getAllSlice()) {
-            sb.append(slice).append("\n");
+        sb.append(joinName).append("-Element\n");
+        for (BranchJavaElement elem : j_bInfo.getAllBranchJavaElement()) {
+            sb.append(elem).append("\n");
         }
         sb.append("\n");
 
@@ -107,8 +106,8 @@ public class ErrorDialog extends AbstractUIDialog {
         }
 
         sb.append("Conflict Element:\n");
-        for (String elemName : cInfo.getAllConflictElement()) {
-            sb.append(elemName).append(",");
+        for (BranchJavaElement elem : cInfo.getAllBranchJavaElement(MergeType.ACCEPT)) {
+            sb.append(elem.getFullName()).append(",");
         }
         sb.delete(sb.length() - 1, sb.length());
         sb.append("\n\n");
@@ -122,7 +121,7 @@ public class ErrorDialog extends AbstractUIDialog {
         sb.append("Merge Point: ").append(acceptName).append("-").append(mPoint.getMergePoint(MergeType.ACCEPT));
         sb.append(" , ").append(joinName).append("-").append(mPoint.getMergePoint(MergeType.JOIN));
         sb.append("\n");
-        sb.append("Target Element: ").append(mPoint.getTargetElement());
+        sb.append("Target Element: ").append(mPoint.getElement(MergeType.ACCEPT).getFullName());
         return sb.toString();
     }
 }

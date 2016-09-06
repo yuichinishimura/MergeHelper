@@ -15,11 +15,10 @@ import org.jtool.changerepository.parser.OpJavaElement;
 import org.jtool.changerepository.parser.OpJavaVisitor;
 
 public class Parser {
-
     public static int JLS_LEVEL = AST.JLS8;
     public static String JC_VERSION = JavaCore.VERSION_1_8;
 
-    public static boolean collectElements(FileInfo fInfo, String code, List<OpJavaElement> elems) {
+    public static boolean collectElements(FileInfo fInfo, String code, List<OpJavaElement> elems) throws NullPointerException {
         CompilationUnit cu = createCompilationUnit(code);
         if (cu != null) {
             OpJavaVisitor visitor = new OpJavaVisitor(fInfo);
@@ -32,7 +31,7 @@ public class Parser {
     }
 
     public static OpJavaElement getElement(FileInfo fInfo, String code, String elemName) {
-        List<OpJavaElement> elems = new ArrayList<OpJavaElement>();
+        List<OpJavaElement> elems = new ArrayList<>();
         boolean parseable = collectElements(fInfo, code, elems);
         if (!parseable) {
             return null;

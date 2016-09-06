@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.IPath;
 import fse.eclipse.branchrecorder.util.PathUtil;
 
 public class ProjectUtil {
-
     private static String HISTORY_DIR_NAME = PathUtil.getHistoryDirName();
     private static IWorkspaceRoot workspace = ResourcesPlugin.getWorkspace().getRoot();
 

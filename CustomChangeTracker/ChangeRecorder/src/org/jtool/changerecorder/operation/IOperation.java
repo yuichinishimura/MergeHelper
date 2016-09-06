@@ -60,6 +60,8 @@ public interface IOperation {
      */
     public long getTime();
     
+    public void setTime(long time);
+    
     /**
      * Returns the sequence number indicating the order of operations whose times are the same.
      * @return the sequence number of this operation

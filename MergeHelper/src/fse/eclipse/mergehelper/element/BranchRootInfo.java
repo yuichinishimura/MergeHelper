@@ -6,11 +6,9 @@ import org.jtool.changerepository.data.FileInfo;
 import fse.eclipse.mergehelper.util.RepositoryElementInfoUtil;
 
 public class BranchRootInfo {
-
     private static BranchRootInfo instance;
-
-    private final IProject project;
     private final BranchInfo acceptInfo, joinInfo;
+    private final IProject project;
 
     private ConflictInfo cInfo;
     private MergePoint mPoint;

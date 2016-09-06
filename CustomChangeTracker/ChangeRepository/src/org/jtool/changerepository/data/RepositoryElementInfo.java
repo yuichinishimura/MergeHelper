@@ -78,12 +78,32 @@ public class RepositoryElementInfo {
         return operations.get(idx);
     }
     
+    public UnifiedOperation getOperationById(int id){
+        for(UnifiedOperation op : operations){
+            if(op.getId() == id){
+                return op;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Returns the number of the operations performed on files within this project.
      * @return the number of the operations
      */
     public int getOperationNumber() {
         return operations.size();
+    }
+    
+    public int indexOfOperation(int id){
+        int idx = 0;
+        for(UnifiedOperation op : operations){
+            if(op.getId() == id){
+                return idx;
+            }
+            idx++;
+        }
+        return -1;
     }
     
     /**

@@ -1,4 +1,4 @@
-package fse.eclipse.mergehelper.detecter;
+package fse.eclipse.mergehelper.detector;
 
 import java.io.File;
 import java.util.Iterator;
@@ -19,19 +19,19 @@ import fse.eclipse.branchrecorder.commit.history.MH_Xml2Operation;
 import fse.eclipse.branchrecorder.commit.history.XmlCommitWriter;
 import fse.eclipse.branchrecorder.commit.operation.CommitOperation;
 import fse.eclipse.mergehelper.Activator;
-import fse.eclipse.mergehelper.Attr;
 import fse.eclipse.mergehelper.element.BranchRootInfo;
 import fse.eclipse.mergehelper.element.MergeType;
 import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
 import fse.eclipse.mergehelper.util.ProjectUtil;
 
 public class BranchHistoryCopier extends AbstractDetector {
-
     private static final String MESSAGE = "Copy History ...";
     private static final String ERROR_MESSAGE = "NULL";
     private static AbstractDetector instance = new BranchHistoryCopier();
 
     private static final String ENCODING = ResourcesPlugin.getEncoding();
+
+    public static final String BRANCH_NAME_MARK = "@";
 
     private BranchHistoryCopier() {
     }
@@ -41,7 +41,7 @@ public class BranchHistoryCopier extends AbstractDetector {
     }
 
     @Override
-    public void execute(ConflictDetectingDialog dialog) {
+    public void execute() {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
         copy(rootInfo, MergeType.ACCEPT);
         copy(rootInfo, MergeType.JOIN);
@@ -163,8 +163,8 @@ public class BranchHistoryCopier extends AbstractDetector {
         }
 
         StringBuilder sb = new StringBuilder(fileAttr);
-        sb.insert(idx, Attr.BRANCH_NAME_MARK);
-        sb.insert(idx + Attr.BRANCH_NAME_MARK.length(), name);
+        sb.insert(idx, BRANCH_NAME_MARK);
+        sb.insert(idx + BRANCH_NAME_MARK.length(), name);
         return sb.toString();
     }
 
@@ -207,7 +207,7 @@ public class BranchHistoryCopier extends AbstractDetector {
     }
 
     private boolean isConflictedCode(String code) {
-        return code.indexOf("<<<<<<< HEAD\n") != -1 && code.indexOf("=======\n") != -1 && code.indexOf(">>>>>>> ") != -1;
+        return code.indexOf("<<<<<<< HEAD\n") != -1 || code.indexOf(">>>>>>> branch") != -1;
     }
 
     @Override
@@ -222,6 +222,6 @@ public class BranchHistoryCopier extends AbstractDetector {
 
     @Override
     protected void nextState(ConflictDetectingDialog dialog) {
-        SliceManager.getInstance().detect(dialog);
+        ChangeRepositoryCreater.getInstance().detect(dialog);
     }
 }

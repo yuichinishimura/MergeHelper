@@ -10,8 +10,8 @@ import org.jtool.changereplayer.Activator;
 import org.jtool.changereplayer.event.ViewChangedListener;
 import org.jtool.changereplayer.event.ViewChangedEvent;
 import org.jtool.changereplayer.event.ViewEventSource;
-import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.operation.UnifiedOperation;
+import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.event.RepositoryChangedEvent;
 import org.jtool.changerepository.event.RepositoryChangedListener;
 import org.jtool.changerepository.event.RepositoryEventSource;
@@ -104,18 +104,20 @@ public class HistoryView extends ViewPart implements RepositoryChangedListener, 
         
         TableColumn idColumn = new TableColumn(operationTable, SWT.LEFT);
         idColumn.setText("id");
-        idColumn.setWidth(40);
+        //idColumn.setWidth(40);
+        idColumn.setWidth(70);
         idColumn.setResizable(true);
         
         TableColumn timeColumn = new TableColumn(operationTable, SWT.LEFT);
         timeColumn.setText("time");
-        timeColumn.setWidth(140);
+//        timeColumn.setWidth(140);
+        timeColumn.setWidth(0);
         timeColumn.setResizable(false);
         
         TableColumn typeColumn = new TableColumn(operationTable, SWT.LEFT);
         typeColumn.setText("type");
-        typeColumn.setWidth(100);
-        typeColumn.setResizable(false);
+        typeColumn.setWidth(200);
+        typeColumn.setResizable(true);
         
         TableColumn detailsColumn = new TableColumn(operationTable, SWT.LEFT);
         detailsColumn.setText("contents");
@@ -226,7 +228,7 @@ public class HistoryView extends ViewPart implements RepositoryChangedListener, 
             UnifiedOperation op = ops.get(i);
             
             TableItem item = new TableItem(operationTable, SWT.NONE);
-            item.setText(0, String.valueOf(i + 1));
+            item.setText(0, String.valueOf(op.getId()));
             item.setText(1, Time.toUsefulFormat(op.getTime()));
             item.setText(2, createOperationTextualRepresentation(op));
             item.setChecked(true);

@@ -6,9 +6,10 @@
 
 package org.jtool.changerepository.dependencygraph;
 
+import org.jtool.changerecorder.util.Time;
 import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.data.ProjectInfo;
-import org.jtool.changerecorder.util.Time;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;

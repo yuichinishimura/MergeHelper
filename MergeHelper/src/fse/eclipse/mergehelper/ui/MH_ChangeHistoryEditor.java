@@ -20,7 +20,6 @@ import org.jtool.changereplayer.ui.SourceCodeViewLoader;
 import fse.eclipse.mergehelper.Activator;
 
 public class MH_ChangeHistoryEditor extends ChangeHistoryEditor {
-
     public static final String ID = "ChangeReplayer.editor.MH_ChangeHistoryEditor";
 
     private static MH_ChangeHistoryEditor editor;
@@ -113,7 +112,7 @@ class EmptyEditorInput implements IEditorInput {
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Object getAdapter(Class adapter) {
         return null;
     }

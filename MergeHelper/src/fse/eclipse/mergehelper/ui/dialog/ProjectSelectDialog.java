@@ -17,8 +17,7 @@ import org.eclipse.swt.widgets.TableItem;
 import fse.eclipse.mergehelper.element.BranchRootInfo;
 import fse.eclipse.mergehelper.util.ProjectUtil;
 
-public class ProjectSelectDialog extends AbstractUIDialog {
-
+public class ProjectSelectDialog extends AbstractMHDialog {
     private static final String TITLE = "MergeHelper";
 
     private IProject project;

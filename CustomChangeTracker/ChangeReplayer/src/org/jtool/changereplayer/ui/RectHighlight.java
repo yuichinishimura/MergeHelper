@@ -6,12 +6,12 @@
 
 package org.jtool.changereplayer.ui;
 
-import org.jtool.changerepository.data.TimeRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.jtool.changerepository.data.TimeRange;
 
 /**
  * A drawer that draws a rectangle highlight.

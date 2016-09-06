@@ -6,10 +6,10 @@
 
 package org.jtool.changerepository.parser;
 
-import org.jtool.changerepository.data.FileInfo;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.jtool.changerepository.data.FileInfo;
 import org.eclipse.jdt.core.dom.Initializer;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;

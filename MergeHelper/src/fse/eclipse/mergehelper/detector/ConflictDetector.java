@@ -1,23 +1,23 @@
-package fse.eclipse.mergehelper.detecter;
+package fse.eclipse.mergehelper.detector;
 
 import java.util.List;
 
-import fse.eclipse.mergehelper.detecter.merge.AMergePointSearcher;
+import org.jtool.changerecorder.util.StringComparator;
+
+import fse.eclipse.mergehelper.detector.merge.OperationSwaper;
 import fse.eclipse.mergehelper.element.BranchFileInfo;
 import fse.eclipse.mergehelper.element.BranchInfo;
 import fse.eclipse.mergehelper.element.BranchRootInfo;
 import fse.eclipse.mergehelper.element.ConflictInfo;
-import fse.eclipse.mergehelper.element.ElementSlice;
 import fse.eclipse.mergehelper.element.MergeType;
 import fse.eclipse.mergehelper.ui.dialog.ConflictDetectingDialog;
 
 public class ConflictDetector extends AbstractDetector {
-
     private static final String MESSAGE = "Detect Conflict ...";
     private static final String ERROR_MESSAGE = "Conflict Element was Not Found";
     private static AbstractDetector instance = new ConflictDetector();
 
-    private boolean isConflict;
+    private ConflictInfo cInfo;
 
     private ConflictDetector() {
     }
@@ -27,37 +27,34 @@ public class ConflictDetector extends AbstractDetector {
     }
 
     @Override
-    public void execute(ConflictDetectingDialog dialog) {
+    public void execute() {
         BranchRootInfo rootInfo = BranchRootInfo.getInstance();
-        BranchInfo acceptInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
-        BranchInfo joinInfo = rootInfo.getBranchInfo(MergeType.JOIN);
+        BranchInfo a_bInfo = rootInfo.getBranchInfo(MergeType.ACCEPT);
+        BranchInfo j_bInfo = rootInfo.getBranchInfo(MergeType.JOIN);
 
-        List<BranchFileInfo> abfInfos = acceptInfo.getAllBranchFileInfo();
-        List<BranchFileInfo> jbfInfos = joinInfo.getAllBranchFileInfo();
+        List<BranchFileInfo> abfInfos = a_bInfo.getAllBranchFileInfo();
+        List<BranchFileInfo> jbfInfos = j_bInfo.getAllBranchFileInfo();
 
-        ConflictInfo cInfo = new ConflictInfo();
+        cInfo = new ConflictInfo();
         for (BranchFileInfo abfInfo : abfInfos) {
-            String aName = abfInfo.getFullName();
             for (BranchFileInfo jbfInfo : jbfInfos) {
-                String jName = jbfInfo.getFullName();
-                if (aName.equals(jName)) {
-                    detectElement(abfInfo, jbfInfo, cInfo);
+                if (abfInfo.equalsFileName(jbfInfo)) {
+                    detectElement(abfInfo, jbfInfo);
                     break;
                 }
             }
         }
-        isConflict = cInfo.isConflict();
         rootInfo.setConflictInfo(cInfo);
     }
 
-    private void detectElement(BranchFileInfo abfInfo, BranchFileInfo jbfInfo, ConflictInfo cInfo) {
-        List<ElementSlice> aslices = abfInfo.getAllSlice();
-        List<ElementSlice> jslices = jbfInfo.getAllSlice();
+    private void detectElement(BranchFileInfo abfInfo, BranchFileInfo jbfInfo) {
+        List<String> aElems = abfInfo.getAllElementName();
+        List<String> jElems = jbfInfo.getAllElementName();
 
-        for (ElementSlice aslice : aslices) {
-            for (ElementSlice jslice : jslices) {
-                if (ElementSlice.equalSliceName(aslice, jslice)) {
-                    cInfo.addConflictElements(aslice, jslice);
+        for (String aElem : aElems) {
+            for (String jElem : jElems) {
+                if (StringComparator.isSame(aElem, jElem)) {
+                    cInfo.addConflictElements(abfInfo.getBranchJavaElement(aElem), jbfInfo.getBranchJavaElement(jElem));
                     break;
                 }
             }
@@ -76,8 +73,8 @@ public class ConflictDetector extends AbstractDetector {
 
     @Override
     protected void nextState(ConflictDetectingDialog dialog) {
-        if (isConflict) {
-            AMergePointSearcher.getInstance().detect(dialog);
+        if (cInfo.isConflict()) {
+            OperationSwaper.getInstance().detect(dialog);
         } else {
             error(dialog);
         }

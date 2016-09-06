@@ -1,30 +1,36 @@
 package fse.eclipse.mergehelper.element;
 
+import org.jtool.changerepository.operation.UnifiedOperation;
+
 public class MergePoint {
+    private final BranchJavaElement a_elem;
+    private final BranchJavaElement j_elem;
+    private UnifiedOperation a_op;
+    private UnifiedOperation j_op;
 
-    private final String targetElement;
-
-    private int a_point;
-    private int j_point;
-
-    public MergePoint(String targetElement) {
-        this.targetElement = targetElement;
+    public MergePoint(BranchJavaElement aElem, BranchJavaElement jElem) {
+        this.a_elem = aElem;
+        this.j_elem = jElem;
     }
 
-    public String getTargetElement() {
-        return targetElement;
-    }
-
-    public int getMergePoint(MergeType type) {
+    public BranchJavaElement getElement(MergeType type) {
         if (MergeType.isAccept(type)) {
-            return a_point;
+            return a_elem;
         } else {
-            return j_point;
+            return j_elem;
         }
     }
 
-    public void setMergePoint(int s_point, int d_point) {
-        this.a_point = s_point;
-        this.j_point = d_point;
+    public UnifiedOperation getMergePoint(MergeType type) {
+        if (MergeType.isAccept(type)) {
+            return a_op;
+        } else {
+            return j_op;
+        }
+    }
+
+    public void setMergePoint(UnifiedOperation a_op, UnifiedOperation j_op) {
+        this.a_op = a_op;
+        this.j_op = j_op;
     }
 }

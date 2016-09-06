@@ -1,49 +1,44 @@
 package fse.eclipse.mergehelper.element;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.jtool.changerecorder.util.StringComparator;
 import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.data.PackageInfo;
 
-import fse.eclipse.mergehelper.util.RepositoryElementInfoUtil;
-
 public class ConflictInfo {
-
-    private final Map<ElementSlice, ElementSlice> elemMap;
+    private final Map<BranchJavaElement, BranchJavaElement> elemMap = new ConcurrentHashMap<>();
 
     public ConflictInfo() {
-        elemMap = new HashMap<ElementSlice, ElementSlice>();
     }
 
-    public Map<ElementSlice, ElementSlice> getConflictSliceMap() {
-        return Collections.unmodifiableMap(elemMap);
+    public Map<BranchJavaElement, BranchJavaElement> getConflictElementMap() {
+        return elemMap;
     }
 
-    public List<String> getAllConflictElement() {
-        List<String> elemNames = new ArrayList<String>();
-        for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
-            elemNames.add(entry.getKey().getName());
+    public List<BranchJavaElement> getAllBranchJavaElement(MergeType type) {
+        if (MergeType.isAccept(type)) {
+            return new ArrayList<>(elemMap.keySet());
+        } else {
+            return new ArrayList<>(elemMap.values());
         }
-        return Collections.unmodifiableList(elemNames);
     }
 
-    public void addConflictElements(ElementSlice aslice, ElementSlice jslice) {
-        elemMap.put(aslice, jslice);
+    public void addConflictElements(BranchJavaElement a_elem, BranchJavaElement j_elem) {
+        elemMap.put(a_elem, j_elem);
     }
 
     public boolean isConflict() {
         return elemMap.size() > 0;
     }
 
-    public boolean isConflictPackage(PackageInfo paInfo) {
-        String paName = paInfo.getName();
-        for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
-            if (entry.getKey().getPackageName().equals(paName)) {
+    public boolean isConflictPackage(PackageInfo pInfo) {
+        String pName = pInfo.getName();
+        for (BranchJavaElement elem : elemMap.keySet()) {
+            if (StringComparator.isSame(pName, elem.getPackageName())) {
                 return true;
             }
         }
@@ -51,21 +46,18 @@ public class ConflictInfo {
     }
 
     public boolean isConflictFile(FileInfo fInfo) {
-        String fName = RepositoryElementInfoUtil.getFileNameExceptExtension(fInfo);
-        String paName = fInfo.getPackageInfo().getName();
-        for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
-            if (entry.getKey().getPackageName().equals(paName)) {
-                if (entry.getKey().getFileName().equals(fName)) {
-                    return true;
-                }
+        String fName = fInfo.getName();
+        for (BranchJavaElement elem : elemMap.keySet()) {
+            if (StringComparator.isSame(fName, elem.getFileName())) {
+                return true;
             }
         }
         return false;
     }
 
-    public boolean isConflictElement(String elemName) {
-        for (Entry<ElementSlice, ElementSlice> entry : elemMap.entrySet()) {
-            if (entry.getKey().getName().equals(elemName)) {
+    public boolean isConflictElement(BranchJavaElement element) {
+        for (BranchJavaElement elem : elemMap.keySet()) {
+            if (element.equalsFileElement(elem)) {
                 return true;
             }
         }

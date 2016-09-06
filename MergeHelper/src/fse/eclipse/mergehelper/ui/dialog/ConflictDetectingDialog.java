@@ -7,19 +7,26 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Composite;
 
-import fse.eclipse.mergehelper.detecter.AbstractDetector;
-import fse.eclipse.mergehelper.detecter.IDetectorState;
-import fse.eclipse.mergehelper.detecter.InitWorkingDirectory;
+import fse.eclipse.mergehelper.detector.AbstractDetector;
+import fse.eclipse.mergehelper.detector.InitWorkingDirectory;
 import fse.eclipse.mergehelper.ui.MH_PackageExplorerView;
 
-public class ConflictDetectingDialog extends AbstractUIDialog implements IRunnableWithProgress {
-
+public class ConflictDetectingDialog extends AbstractMHDialog implements IRunnableWithProgress {
     private static final String TITLE = "Please Wait";
-
     private IProgressMonitor monitor;
 
     ConflictDetectingDialog(Composite parent) {
         super(parent);
+    }
+
+    @Override
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        this.monitor = monitor;
+        monitor.beginTask("", 7);
+        monitor.setCanceled(false);
+
+        AbstractDetector detector = InitWorkingDirectory.getInstance();
+        detector.detect(this);
     }
 
     @Override
@@ -62,19 +69,9 @@ public class ConflictDetectingDialog extends AbstractUIDialog implements IRunnab
     }
 
     @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        this.monitor = monitor;
-        monitor.beginTask("", IDetectorState.STATE_NUMBER);
-        monitor.setCanceled(false);
-
-        AbstractDetector detector = InitWorkingDirectory.getInstance();
-        detector.detect(this);
-    }
-
-    @Override
     protected void open() {
         // no execute
-    };
+    }
 
     public void detectSuccess() {
         monitor.done();

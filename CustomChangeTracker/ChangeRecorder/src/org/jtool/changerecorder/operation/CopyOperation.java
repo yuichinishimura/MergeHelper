@@ -59,6 +59,10 @@ public class CopyOperation extends AbstractOperation {
         return start;
     }
     
+    public void setStart(int start) {
+        this.start = start;
+    }
+    
     /**
      * Returns the content of the text copied by this operation.
      * @return the content of the copied text, or the empty string

@@ -6,8 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class AbstractUIDialog {
-
+public abstract class AbstractMHDialog {
     protected Composite parent;
     protected Shell dialog;
 
@@ -16,7 +15,7 @@ public abstract class AbstractUIDialog {
 
     protected int buttonWidth = 80;
 
-    AbstractUIDialog(Composite parent) {
+    AbstractMHDialog(Composite parent) {
         this.parent = parent;
         dialog = new Shell(parent.getShell(), SWT.CLOSE | SWT.TITLE | SWT.SYSTEM_MODAL);
     }
@@ -42,7 +41,7 @@ public abstract class AbstractUIDialog {
      * ダイアログ生成
      */
     public void show() {
-        setDialogTitle();
+        setDialogTitle(getDialogTitle());
         createDialog();
         open();
     }
@@ -51,20 +50,23 @@ public abstract class AbstractUIDialog {
      * 終了時の処理
      */
     public void finish() {
-        dialog.dispose();
+        if (dialog != null && !dialog.isDisposed()) {
+            dialog.dispose();
+        }
     }
 
     /**
      * ダイアログのタイトルを設定する
      */
-    private void setDialogTitle() {
-        String title = getDialogTitle();
+    protected void setDialogTitle(String title) {
         dialog.setText(title);
     }
 
     protected void open() {
-        dialog.pack();
-        dialog.open();
+        if (dialog != null && !dialog.isDisposed()) {
+            dialog.pack();
+            dialog.open();
+        }
     }
 
     /**
@@ -82,8 +84,7 @@ public abstract class AbstractUIDialog {
     /**
      * 指定コンポジットに横線を加えるもの
      *
-     * @param parent
-     *            指定コンポジット
+     * @param parent 指定コンポジット
      */
     protected void addHorizontalLine() {
         Label labelLine = new Label(dialog, SWT.SEPARATOR | SWT.HORIZONTAL);

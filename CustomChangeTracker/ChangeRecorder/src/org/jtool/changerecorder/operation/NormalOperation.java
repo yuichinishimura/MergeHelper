@@ -179,6 +179,10 @@ public class NormalOperation extends TextOperation {
         return actionType;
     }
     
+    public void setStart(int start){
+        this.start = start;
+    }
+    
     /**
      * Sets the sort of the edit action for this operation.
      * @param yupe the string representing the edit action

@@ -96,6 +96,11 @@ public abstract class AbstractOperation implements IOperation {
         return time;
     }
     
+    @Override
+    public void setTime(long time) {
+        this.time = time;
+    }
+    
     /**
      * Sets the sequence number that indicates the order of operations in the same time.
      * @param number the sequence number of this operation

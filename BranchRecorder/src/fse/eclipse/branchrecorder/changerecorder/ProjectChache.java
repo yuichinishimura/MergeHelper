@@ -47,7 +47,16 @@ public class ProjectChache {
         branchName = "";
 
         IProject p = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-        File file = new File(p.getLocation().toString());
+        if (p == null) {
+            return;
+        }
+
+        File file = null;
+        try {
+            file = new File(p.getLocation().toString());
+        } catch (NullPointerException e) {
+            return;
+        }
         File gParent = file.getParentFile().getParentFile();
 
         FileRepositoryBuilder b = new FileRepositoryBuilder();

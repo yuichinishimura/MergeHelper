@@ -6,8 +6,9 @@
 
 package org.jtool.changerepository.dependencygraph;
 
-import org.jtool.changerepository.operation.UnifiedOperation;
 import org.jtool.changerepository.data.FileInfo;
+import org.jtool.changerepository.operation.UnifiedOperation;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;

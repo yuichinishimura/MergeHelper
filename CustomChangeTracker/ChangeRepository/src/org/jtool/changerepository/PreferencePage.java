@@ -21,7 +21,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
      * Merges two successive operations with the same string whose content is stored as the inserted text of
      *   the former operation and stored as the deleted text of the latter one if this value is true.
      */
-    static final String MERGE_OPERATIONS = "merge.opetrations";
+    static final String MERGE_OPERATIONS = "merge.operations";
     
     /**
      * The default value that indicates if two successive operations will be merged.

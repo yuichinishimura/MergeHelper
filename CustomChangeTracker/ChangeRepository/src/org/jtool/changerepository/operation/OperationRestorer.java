@@ -66,7 +66,7 @@ public class OperationRestorer {
                     }
                     */
                     
-                    errorStatus = "Mismatch found:" +  op.getTime() +
+                    errorStatus = "Mismatch found:" +  op.getId() +
                                   "[" + op.getDeletedText() + "] to be replaced with [" + replacedText + "]";
                     return null;
                 }
@@ -122,7 +122,7 @@ public class OperationRestorer {
                     }
                     */
                     
-                    errorStatus = "Mismatch found:" +  op.getTime() +
+                    errorStatus = "Mismatch found Reverse:" +  op.getId() +
                             "[" + op.getInsertedText() + "] to be replaced with [" + replacedText + "]";
                     return null;
                 }

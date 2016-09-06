@@ -1,8 +1,6 @@
 package fse.eclipse.mergehelper.ui;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -22,26 +20,23 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.jtool.changerecorder.util.StringComparator;
 import org.jtool.changerecorder.util.Time;
 import org.jtool.changereplayer.event.ViewChangedEvent;
 import org.jtool.changereplayer.event.ViewEventSource;
 import org.jtool.changereplayer.ui.HistoryView;
 import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.event.RepositoryEventSource;
+import org.jtool.changerepository.operation.CodeInsertedOperation;
 import org.jtool.changerepository.operation.UnifiedOperation;
 
 import fse.eclipse.mergehelper.Activator;
 import fse.eclipse.mergehelper.element.BranchFileInfo;
-import fse.eclipse.mergehelper.element.BranchFileInfo.MergedResult;
+import fse.eclipse.mergehelper.element.BranchJavaElement;
 import fse.eclipse.mergehelper.element.BranchRootInfo;
 import fse.eclipse.mergehelper.element.ConflictInfo;
-import fse.eclipse.mergehelper.element.ElementSlice;
-import fse.eclipse.mergehelper.element.MergePoint;
-import fse.eclipse.mergehelper.element.MergeType;
-import fse.eclipse.mergehelper.util.RepositoryElementInfoUtil;
 
 public class MH_HistoryView extends HistoryView {
-
     public static final String ID = "ChangeHistory.view.MH_HistoryView";
 
     private static ImageDescriptor mergeIcon = Activator.getImageDescriptor("icons/m_arrow.gif");
@@ -51,13 +46,12 @@ public class MH_HistoryView extends HistoryView {
 
     private BranchFileInfo bfInfo;
     private ConflictInfo cInfo;
-    private MergePoint mPoint;
     private int mergeIdx;
 
     private Action elementButton, mergedButton;
 
     private static final String DefaultElementButtonText = "All Elements";
-    private static final int ID_COL = 0, TIME_COL = 1, OP_COL = 2, ELEM_COL = 3;
+    private static final int IDX_COL = 0, UID_COL = 1, TIME_COL = 2, OP_COL = 3, ELEM_COL = 4;
     private static final String MERGE_MARK = "☆";
 
     public MH_HistoryView() {
@@ -74,20 +68,29 @@ public class MH_HistoryView extends HistoryView {
         return operationTable.getItemCount();
     }
 
+    public int getAMergeIndex() {
+        return mergeIdx;
+    }
+
     @Override
     public void createPartControl(Composite parent) {
         operationTable = new Table(parent, SWT.BORDER | SWT.SINGLE | SWT.CHECK | SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL);
         operationTable.setLinesVisible(true);
         operationTable.setHeaderVisible(true);
 
+        TableColumn idxColumn = new TableColumn(operationTable, SWT.LEFT);
+        idxColumn.setText("idx");
+        idxColumn.setWidth(80);
+        idxColumn.setResizable(true);
+
         TableColumn idColumn = new TableColumn(operationTable, SWT.LEFT);
-        idColumn.setText("id");
-        idColumn.setWidth(60);
+        idColumn.setText("UID");
+        idColumn.setWidth(80);
         idColumn.setResizable(true);
 
         TableColumn timeColumn = new TableColumn(operationTable, SWT.LEFT);
         timeColumn.setText("time");
-        timeColumn.setWidth(140);
+        timeColumn.setWidth(10);
         timeColumn.setResizable(true);
 
         TableColumn typeColumn = new TableColumn(operationTable, SWT.LEFT);
@@ -155,7 +158,6 @@ public class MH_HistoryView extends HistoryView {
 
             bfInfo = rootInfo.getBranchFileInfo(fInfo);
             cInfo = rootInfo.getConflictInfo();
-            mPoint = rootInfo.getMergePoint();
 
             createTableItems(bfInfo);
 
@@ -169,16 +171,49 @@ public class MH_HistoryView extends HistoryView {
         }
     }
 
-    private void setupToolBarActions() {
-        List<ElementSlice> slices = bfInfo.getAllSlice();
-        List<String> elemNames = new ArrayList<String>();
-        for (ElementSlice slice : slices) {
-            elemNames.add(slice.getName());
+    private void createTableItems(BranchFileInfo bfInfo) {
+        operationTable.removeAll();
+
+        List<UnifiedOperation> ops = fileInfo.getOperations();
+        for (int i = 0; i < ops.size(); i++) {
+            String id;
+            String time;
+            String text;
+            String elemName;
+
+            UnifiedOperation op = ops.get(i);
+            if (CodeInsertedOperation.isCodeInsertedOperation(op)) {
+                mergeIdx = i;
+                id = MERGE_MARK;
+                time = "";
+                elemName = "";
+            } else {
+                id = String.valueOf(op.getId());
+                time = Time.toUsefulFormat(op.getTime());
+                BranchJavaElement elem = bfInfo.getBranchJavaElement(op);
+                if (elem != null) {
+                    elemName = elem.getSimpleName();
+                } else {
+                    elemName = "";
+                }
+            }
+            text = OperationRepresentation.createOperationTextualRepresentation(op);
+
+            TableItem item = new TableItem(operationTable, SWT.NONE);
+            item.setText(IDX_COL, String.valueOf(i + 1));
+            item.setText(UID_COL, id);
+            item.setText(TIME_COL, time);
+            item.setText(OP_COL, text);
+            item.setText(ELEM_COL, elemName);
         }
+    }
+
+    private void setupToolBarActions() {
+        List<BranchJavaElement> elems = bfInfo.getAllBranchJavaElement();
 
         elementButton.setText(indentText(DefaultElementButtonText));
-        if (elemNames.size() > 0) {
-            elementButton.setMenuCreator(new MenuCreator(elemNames));
+        if (elems.size() > 0) {
+            elementButton.setMenuCreator(new MenuCreator(elems));
             elementButton.setEnabled(true);
 
             mergedButton.setEnabled(true);
@@ -193,98 +228,15 @@ public class MH_HistoryView extends HistoryView {
         }
     }
 
-    private void createTableItems(BranchFileInfo bfInfo) {
-        operationTable.removeAll();
-
-        String branchName = RepositoryElementInfoUtil.getBranchName(fileInfo);
-        MergeType type = BranchRootInfo.getInstance().getType(branchName);
-        int mergePoint = mPoint.getMergePoint(type);
-        Map<Integer, MergedResult> resultMap = bfInfo.getMergedResultMap();
-
-        List<UnifiedOperation> ops = fileInfo.getOperations();
-        int size = ops.size();
-
-        boolean setMergeItemFlag = false;
-        String code = "";
-        int beforeId = -1;
-        for (int i = 0; i < size; i++) {
-            UnifiedOperation op = ops.get(i);
-
-            int id = op.getId();
-            int offset;
-            if (!op.isCommitOpeartion()) {
-                if (id <= mergePoint + 1) {
-                    offset = op.getStart();
-                    code = fileInfo.getCode(i);
-                } else {
-                    offset = resultMap.get(beforeId).getOperationOffset();
-                    code = resultMap.get(beforeId).getCode();
-                }
-            } else {
-                offset = -1;
-            }
-            String text = OperationRepresentation.createOperationTextualRepresentation(op, offset);
-            String elemName = getAssociatedName(bfInfo, op);
-
-            TableItem item = new TableItem(operationTable, SWT.NONE);
-            item.setText(ID_COL, String.valueOf(i + 1));
-            item.setText(TIME_COL, Time.toUsefulFormat(op.getTime()));
-            item.setText(OP_COL, text);
-            item.setText(ELEM_COL, elemName);
-            item.setData(code);
-
-            if (setMergeItemFlag) {
-                mergeIdx = i;
-                createMergeItem(cInfo, type, resultMap.get(mergePoint).getCode());
-                setMergeItemFlag = false;
-            } else if (id == mergePoint) {
-                setMergeItemFlag = true;
-            }
-            beforeId = id;
-        }
-
-        if (setMergeItemFlag) {
-            mergeIdx = size - 1;
-            createMergeItem(cInfo, type, resultMap.get(mergePoint).getCode());
-        }
-    }
-
-    private void createMergeItem(ConflictInfo cInfo, MergeType type, String mergedCode) {
-        MergeType aType = MergeType.getAnotherType(type);
-        StringBuilder sb = new StringBuilder();
-        sb.append(BranchRootInfo.getInstance().getBranchName(aType));
-        // sb.append(" : ").append(mPoint.getFileId(aType));
-
-        TableItem item = new TableItem(operationTable, SWT.NONE);
-        item.setText(ID_COL, MERGE_MARK);
-        item.setText(TIME_COL, sb.toString());
-        item.setData(mergedCode);
-    }
-
-    private String getAssociatedName(BranchFileInfo bfInfo, UnifiedOperation op) {
-        List<ElementSlice> slices = bfInfo.getSlices(op);
-        if (slices == null || slices.size() == 0) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (ElementSlice slice : slices) {
-            sb.append(slice.getName()).append(",");
-        }
-        sb.delete(sb.length() - 1, sb.length());
-        return sb.toString();
-    }
-
     @Override
     public void notify(ViewChangedEvent evt) {
         Object source = evt.getSource();
+
         if (source instanceof MH_SourceCodeView) {
             if (operationTable != null && operationTable.getItemCount() > 0) {
                 MH_SourceCodeView view = (MH_SourceCodeView) source;
-                int idx = view.getCurrentOperationIndex();
-                String code = operationTable.getItems()[idx].getData().toString();
-                view.update(code);
-                goTo(idx);
+                setOperationTable(view.getFileInfo());
+                goTo(view.getCurrentOperationIndex());
                 return;
             }
         }
@@ -299,7 +251,6 @@ public class MH_HistoryView extends HistoryView {
     public void refresh() {
         bfInfo = null;
         cInfo = null;
-        mPoint = null;
         mergeIdx = -1;
         if (operationTable != null && !operationTable.isDisposed()) {
             operationTable.removeAll();
@@ -339,44 +290,45 @@ public class MH_HistoryView extends HistoryView {
     }
 
     private void updateTableItemCheck(String elemName, boolean isMergedOnly) {
-        elemName = elemName.trim();
-
         TableItem[] items = operationTable.getItems();
         int length = items.length;
-        if (elemName.equals(DefaultElementButtonText)) {
-            for (int i = 0; i < length; i++) {
-                TableItem item = items[i];
-                if (item.getText(ELEM_COL).length() > 0 || i == mergeIdx + 1) {
-                    item.setChecked(true);
-                } else {
-                    item.setChecked(false);
+        int i;
+        if (isMergedOnly) {
+            if (mergeIdx + 1 < length) {
+                for (i = 0; i < mergeIdx; i++) {
+                    items[i].setChecked(false);
                 }
+                if (mergeIdx != -1) {
+                    i = mergeIdx;
+                    items[i].setChecked(true);
+                    i++;
+                }
+            } else {
+                for (i = 0; i < length; i++) {
+                    items[i].setChecked(false);
+                }
+                return;
             }
         } else {
-            for (int i = 0; i < length; i++) {
+            i = 0;
+        }
+
+        if (StringComparator.isSame(elemName, DefaultElementButtonText)) {
+            for (; i < length; i++) {
+                items[i].setChecked(true);
+            }
+        } else {
+            for (; i < length; i++) {
                 TableItem item = items[i];
-                if (i != mergeIdx + 1) {
-                    String[] elems = item.getText(ELEM_COL).split(",");
-                    boolean isCheck = false;
-                    for (String elem : elems) {
-                        if (elem.equals(elemName)) {
-                            isCheck = true;
-                            break;
-                        }
-                    }
-                    item.setChecked(isCheck);
+                String name = item.getText(ELEM_COL);
+                if (StringComparator.isSame(name, elemName) || i == mergeIdx) {
+                    items[i].setChecked(true);
                 } else {
-                    item.setChecked(true);
+                    items[i].setChecked(false);
                 }
             }
         }
 
-        if (isMergedOnly) {
-            for (int i = 0; i <= mergeIdx; i++) {
-                TableItem item = items[i];
-                item.setChecked(false);
-            }
-        }
         goToTop();
     }
 
@@ -423,10 +375,10 @@ public class MH_HistoryView extends HistoryView {
     }
 
     private class MenuCreator implements IMenuCreator {
-        final List<String> elemNames;
+        final List<BranchJavaElement> elems;
 
-        MenuCreator(List<String> elemNames) {
-            this.elemNames = elemNames;
+        MenuCreator(List<BranchJavaElement> elems) {
+            this.elems = elems;
         }
 
         @Override
@@ -450,10 +402,10 @@ public class MH_HistoryView extends HistoryView {
                 }
             });
 
-            for (String elemName : elemNames) {
+            for (BranchJavaElement elem : elems) {
                 MenuItem item = new MenuItem(menu, SWT.PUSH);
-                item.setText(elemName);
-                if (cInfo.isConflictElement(elemName)) {
+                item.setText(elem.getSimpleName());
+                if (cInfo.isConflictElement(elem)) {
                     item.setImage(conflictIcon);
                 }
 
@@ -483,7 +435,6 @@ public class MH_HistoryView extends HistoryView {
 
         @Override
         public void dispose() {
-
         }
     }
 }

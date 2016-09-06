@@ -57,17 +57,17 @@ public class PackageExplorerView extends ViewPart implements RepositoryChangedLi
     /**
      * The information on the file of interest.
      */
-    private FileInfo fileInfo;
+    protected FileInfo fileInfo;
     
     /**
      * The table viewer for project selection
      */
-    private TreeViewer viewer;
+    protected TreeViewer viewer;
     
     /**
      * The editor that displays the change history.
      */
-    private ChangeHistoryEditor editor;
+    protected ChangeHistoryEditor editor;
     
     /**
      * A flag that indicates if this view displays a repository in the internal workspace.

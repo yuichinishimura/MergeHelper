@@ -154,6 +154,14 @@ public class UnifiedOperation {
         return id;
     }
     
+    public int indexOfFileInfo(){
+        return fileInfo.indexOfOperation(id);
+    }
+    
+    public int indexOfProjectInfo(){
+        return projectInfo.indexOfOperation(id);
+    }
+    
     /**
      * Sets the project information related to this operation.
      * @param pinfo the project information to be stored
@@ -308,6 +316,17 @@ public class UnifiedOperation {
         return -1;
     }
     
+    public void setStart(int start){
+        if (isNormalOperation()) {
+            NormalOperation op = (NormalOperation)operation;
+            op.setStart(start);
+        
+        } else if (isCopyOperation()) {
+            CopyOperation op = (CopyOperation)operation;
+            op.setStart(start);
+        }
+    }
+    
     /**
      * Returns the content of the text inserted by this operation.
      * @return the content of the inserted text, or the empty string
@@ -443,6 +462,10 @@ public class UnifiedOperation {
      */
     public long getTime() {
         return operation.getTime();
+    }
+    
+    public void setTime(long time){
+        operation.setTime(time);
     }
     
     /**

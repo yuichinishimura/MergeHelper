@@ -3,6 +3,7 @@ package fse.eclipse.mergehelper.ui;
 import org.jtool.changerecorder.operation.CopyOperation;
 import org.jtool.changerecorder.operation.FileOperation;
 import org.jtool.changerecorder.operation.NormalOperation;
+import org.jtool.changerepository.operation.CodeInsertedOperation;
 import org.jtool.changerepository.operation.UnifiedOperation;
 
 import fse.eclipse.branchrecorder.commit.operation.CommitOperation;
@@ -21,6 +22,8 @@ public class OperationRepresentation {
             return createFileOperationTextualRepresentation((FileOperation) op.getIOperation());
         } else if (op.isCommitOpeartion()) {
             return createCommitOperationTextualRepresentation((CommitOperation) op.getIOperation());
+        } else if (CodeInsertedOperation.isCodeInsertedOperation(op)) {
+            return createAMergeOperationTextualRepresentation((CodeInsertedOperation) op);
         }
         return "";
     }
@@ -84,6 +87,14 @@ public class OperationRepresentation {
         sb.append(op.getShortCommitId());
         sb.append(" PARENT:");
         sb.append(op.getShortParentCommitId());
+
+        return sb.toString();
+    }
+
+    private static String createAMergeOperationTextualRepresentation(CodeInsertedOperation op) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("ArtificialMerge");
 
         return sb.toString();
     }

@@ -144,7 +144,7 @@ public abstract class TextOperation extends AbstractOperation {
      * @return <code>true</code> if the inserted text is not empty but the deleted text is empty, otherwise <code>false</code>
      */
     public boolean isInsertion() {
-        return insertedText.length() != 0 && deletedText.length() == 0;
+        return (insertedText.length() - deletedText.length() >= 0) && !isEmpty();
     }
     
     /**
@@ -152,7 +152,7 @@ public abstract class TextOperation extends AbstractOperation {
      * @return <code>true</code> if the deleted text is not empty but the inserted text is empty, otherwise <code>false</code>
      */
     public boolean isDeletion() {
-        return insertedText.length() == 0 && deletedText.length() != 0;
+        return (deletedText.length() - insertedText.length() >= 0) && !isEmpty();
     }
     
     /**

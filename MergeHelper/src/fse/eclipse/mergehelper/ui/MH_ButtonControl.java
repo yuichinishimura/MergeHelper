@@ -15,7 +15,6 @@ import org.jtool.changerepository.operation.UnifiedOperation;
 import fse.eclipse.mergehelper.Activator;
 
 public class MH_ButtonControl extends ButtonControl {
-
     private Action prevAction;
     private Action nextAction;
 

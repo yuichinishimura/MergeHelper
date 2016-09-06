@@ -55,10 +55,6 @@ public class MH_SourceCodeView extends SourceCodeView {
         }
     }
 
-    public void update(String code) {
-        ((MH_SourceCodeControl) sourcecodeControl).update(code);
-    }
-
     private void goTo(int idx, long time) {
         setFocalTime(idx, time);
 
@@ -69,13 +65,13 @@ public class MH_SourceCodeView extends SourceCodeView {
 
         sendViewEvent();
     }
-    
+
     @Override
     public void setFocalTime(int idx, long time) {
         currentOperationIndex = idx;
         focalTime = time;
-        
-        //sourcecodeControl.update();
+
+        sourcecodeControl.update();
         timelineControl.update();
     };
 

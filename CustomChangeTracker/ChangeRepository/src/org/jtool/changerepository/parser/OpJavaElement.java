@@ -6,9 +6,10 @@
 
 package org.jtool.changerepository.parser;
 
+import java.util.List;
+
 import org.jtool.changerepository.data.FileInfo;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +60,10 @@ public class OpJavaElement {
         range = new CodeRange(start, end);
         this.finfo = finfo;
         this.name = name;
+    }
+    
+    public FileInfo getFileInfo() {
+        return finfo;
     }
     
     /**

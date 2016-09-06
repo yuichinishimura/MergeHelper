@@ -1,12 +1,13 @@
 package fse.eclipse.mergehelper.util;
 
+import java.util.List;
+
 import org.jtool.changerepository.data.FileInfo;
 import org.jtool.changerepository.data.PackageInfo;
-import org.jtool.changerepository.data.ProjectInfo;
 import org.jtool.changerepository.data.RepositoryElementInfo;
 import org.jtool.changerepository.operation.UnifiedOperation;
 
-import fse.eclipse.mergehelper.Attr;
+import fse.eclipse.mergehelper.detector.BranchHistoryCopier;
 
 public class RepositoryElementInfoUtil {
 
@@ -22,41 +23,30 @@ public class RepositoryElementInfoUtil {
             name = rInfo.getName();
         }
 
-        int idx = name.indexOf(Attr.BRANCH_NAME_MARK);
+        int idx = name.indexOf(BranchHistoryCopier.BRANCH_NAME_MARK);
         if (idx != -1) {
-            idx += Attr.BRANCH_NAME_MARK.length();
+            idx += BranchHistoryCopier.BRANCH_NAME_MARK.length();
             return name.substring(idx);
         }
         return null;
     }
 
-    public static String getProjectName(ProjectInfo pInfo) {
-        String name = pInfo.getName();
-        int idx = name.indexOf(Attr.BRANCH_NAME_MARK);
+    public static String getNameExcludeBranchName(String name) {
+        int idx = name.indexOf(BranchHistoryCopier.BRANCH_NAME_MARK);
         if (idx != -1) {
             return name.substring(0, idx);
         }
         return name;
     }
 
-    public static String getFileNameExceptExtension(FileInfo fInfo) {
-        String name = fInfo.getName();
-        int idx = name.indexOf(".");
-        return name.substring(0, idx);
-    }
-
-    public static int getJustBeforeFileId(FileInfo fInfo, int id) {
-        UnifiedOperation op = fInfo.getProjectInfo().getOperation(id - 1);
-        long time = op.getTime();
-
-        int size = fInfo.getOperationNumber();
-        for (int i = size - 1; i >= 0; i--) {
-            UnifiedOperation fop = fInfo.getOperation(i);
-            long ftime = fop.getTime();
-            if (ftime <= time) {
-                return fop.getId();
+    public static int indexOfJustBeforeFileOperation(FileInfo fInfo, long time) {
+        List<UnifiedOperation> ops = fInfo.getOperations();
+        for (int i = ops.size() - 1; i >= 0; i--) {
+            UnifiedOperation op = ops.get(i);
+            if (op.getTime() < time) {
+                return i;
             }
         }
-        return fInfo.getOperation(0).getId();
+        return -1;
     }
 }

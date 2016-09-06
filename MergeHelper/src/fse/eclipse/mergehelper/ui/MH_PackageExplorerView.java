@@ -40,17 +40,12 @@ import fse.eclipse.mergehelper.ui.dialog.ProjectSelectDialog;
 import fse.eclipse.mergehelper.ui.dialog.ResultDialog;
 
 public class MH_PackageExplorerView extends PackageExplorerView {
-
     public static final String ID = "ChangeHistory.view.MH_PackageExplorerView";
 
     private static final ImageDescriptor projectImage = Activator.getChangeTrackerImageDescriptor("icons/projects.gif");
     private static final ImageDescriptor resultDialogImage = Activator.getImageDescriptor("icons/dialog.gif");
 
     private static MH_PackageExplorerView instance;
-
-    private FileInfo fileInfo;
-    private TreeViewer viewer;
-    private MH_ChangeHistoryEditor editor;
 
     private Action resultDialogButton;
 
@@ -158,28 +153,30 @@ public class MH_PackageExplorerView extends PackageExplorerView {
     }
 
     private TreeNode[] getProjectNodes() {
-        WorkspaceInfo winfo = RepositoryManager.getInstance().getWorkspaceInfo();
-        List<ProjectInfo> projects = winfo.getAllProjectInfo();
-        int size = projects.size();
-        TreeNode[] nodes = new TreeNode[size];
+        WorkspaceInfo wInfo = RepositoryManager.getInstance().getWorkspaceInfo();
+        List<ProjectInfo> pInfos = wInfo.getAllProjectInfo();
+        int size = pInfos.size();
+        List<TreeNode> nodes = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            ProjectInfo pinfo = projects.get(i);
+            ProjectInfo pInfo = pInfos.get(i);
 
-            TreeNode node = new TreeNode(pinfo);
-            TreeNode[] packageNodes = getPackageNodes(pinfo, node);
-            node.setChildren(packageNodes);
-            node.setParent(null);
-            nodes[i] = node;
+            if (!pInfo.getName().equals("Unknown")) {
+                TreeNode node = new TreeNode(pInfo);
+                TreeNode[] packageNodes = getPackageNodes(pInfo, node);
+                node.setChildren(packageNodes);
+                node.setParent(null);
+                nodes.add(node);
+            }
         }
-        return nodes;
+        return nodes.toArray(new TreeNode[nodes.size()]);
     }
 
-    private TreeNode[] getPackageNodes(ProjectInfo pinfo, TreeNode parent) {
-        List<PackageInfo> packages = pinfo.getAllPackageInfo();
-        int size = packages.size();
-        List<TreeNode> nodes = new ArrayList<TreeNode>(size);
+    private TreeNode[] getPackageNodes(ProjectInfo pInfo, TreeNode parent) {
+        List<PackageInfo> paInfos = pInfo.getAllPackageInfo();
+        int size = paInfos.size();
+        List<TreeNode> nodes = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            PackageInfo painfo = packages.get(i);
+            PackageInfo painfo = paInfos.get(i);
 
             TreeNode node = new TreeNode(painfo);
             TreeNode[] fileNodes = getFileNodes(painfo, node);
